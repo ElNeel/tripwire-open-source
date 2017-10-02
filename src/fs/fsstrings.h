@@ -1,6 +1,6 @@
 //
 // The developer of the original code and/or files is Tripwire, Inc.
-// Portions created by Tripwire, Inc. are copyright (C) 2000 Tripwire,
+// Portions created by Tripwire, Inc. are copyright (C) 2000-2017 Tripwire,
 // Inc. Tripwire is a registered trademark of Tripwire, Inc.  All rights
 // reserved.
 // 
@@ -55,6 +55,7 @@ TSS_BeginStringIds( fs )
     STR_FT_SOCK,
     STR_FT_DOOR,
     STR_FT_PORT,
+    STR_FT_NAMED,
 
     // property names
     STR_PROP_DEV,
@@ -77,9 +78,12 @@ TSS_BeginStringIds( fs )
     STR_PROP_SHA,
     STR_PROP_HAVAL,
     STR_PROP_ACL,
+
     STR_PROP_SHA256,
     STR_PROP_SHA512,
-    
+
+/* Leaving these here in case we ever implement long property names
+
     STR_PARSER_PROP_DEV,
     STR_PARSER_PROP_RDEV,
     STR_PARSER_PROP_INODE,
@@ -101,6 +105,7 @@ TSS_BeginStringIds( fs )
     STR_PARSER_PROP_HAVAL,
     STR_PARSER_PROP_SHA256,
     STR_PARSER_PROP_SHA512,
+*/    
 
     STR_PARSER_READONLY,
     STR_PARSER_DYNAMIC,
