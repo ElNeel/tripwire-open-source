@@ -30,8 +30,8 @@
 // info@tripwire.org or www.tripwire.org.
 //
 // updatedb.cpp
-#include "stdtripwire.h"
-#include "tripwirestrings.h"
+#include "stdengine.h"
+#include "enginestrings.h"
 #include "updatedb.h"
 #include "db/hierdatabase.h"
 #include "tw/dbdatasource.h"
@@ -102,7 +102,7 @@ bool cUpdateDb::Execute( uint32 flags )
         for(fcoIter->SeekBegin(); ! fcoIter->Done(); fcoIter->Next())
         {
             TW_NOTIFY_VERBOSE(  _T("%s%s\n"), 
-                                TSS_GetString( cTripwire, tripwire::STR_NOTIFY_DB_ADDING ).c_str(),
+                                TSS_GetString( cEngine, engine::STR_NOTIFY_DB_ADDING ).c_str(),
                                 pTrans->ToStringDisplay( fcoIter->FCO()->GetName() ).c_str() );
             //
             // seek to the new FCO, creating the path if necessary..
@@ -134,7 +134,7 @@ bool cUpdateDb::Execute( uint32 flags )
         for(rmIter->SeekBegin(); ! rmIter->Done(); rmIter->Next())
         {
             TW_NOTIFY_VERBOSE(  _T("%s%s\n"), 
-                                TSS_GetString( cTripwire, tripwire::STR_NOTIFY_DB_REMOVING ).c_str(),
+                                TSS_GetString( cEngine, engine::STR_NOTIFY_DB_REMOVING ).c_str(),
                                 pTrans->ToStringDisplay( rmIter->FCO()->GetName() ).c_str() );
 
             
@@ -155,7 +155,7 @@ bool cUpdateDb::Execute( uint32 flags )
         for(changeIter.SeekBegin(); ! changeIter.Done(); changeIter.Next())
         {
             TW_NOTIFY_VERBOSE(  _T("%s%s\n"), 
-                                TSS_GetString( cTripwire, tripwire::STR_NOTIFY_DB_CHANGING ).c_str(),
+                                TSS_GetString( cEngine, engine::STR_NOTIFY_DB_CHANGING ).c_str(),
                                 pTrans->ToStringDisplay( changeIter.GetOld()->GetName() ).c_str() );
             
             d.TraceDebug(">>> Changing FCO %s\n", changeIter.GetOld()->GetName().AsString().c_str());

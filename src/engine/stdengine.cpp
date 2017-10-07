@@ -29,48 +29,13 @@
 // If you have any questions, please contact Tripwire, Inc. at either
 // info@tripwire.org or www.tripwire.org.
 //
-///////////////////////////////////////////////////////////////////////////////
-// syslog.cpp
+//
+// Name....: stdengine.cpp
+// Date....: 10/02/17
+// Creator.: bcox
+//
 //
 
-#include "stdtripwire.h"
-#include "syslog_trip.h" 
+#include "stdengine.h"
 
-#if HAVE_SYSLOG_H
-#include <syslog.h>
-#endif
 
-#if HAVE_SYS_SYSLOG_H
-#include <sys/syslog.h>
-#endif
-
-// next three includes are for error reporting
-#include "tw/twutil.h"
-#include "tw/twerrors.h"
-#include "tw/twstrings.h"
-
-#if IS_AROS
-  #include <proto/bsdsocket.h>
-  #define openlog(a,b,c)
-  #define closelog()
-#endif
-
-///////////////////////////////////////////////////////////////////////////////
-// Syslog
-///////////////////////////////////////////////////////////////////////////////
-void cSyslog::Log(const TCHAR* programName, cSyslog::LogType logType, const TCHAR* message)
-{
-// SkyOS has syslog.h but doesn't actually implement the calls.
-#if SUPPORTS_SYSLOG
-    
-    (void)logType; // logType is not used for Unix syslog
-
-    ASSERT(sizeof(TCHAR) == sizeof(char));
-    const char* ident = programName;
-    const char* msg = message;
-	
-    openlog(ident, LOG_PID, LOG_USER);
-    syslog(LOG_NOTICE, "%s", msg);
-    closelog();
-#endif
-}

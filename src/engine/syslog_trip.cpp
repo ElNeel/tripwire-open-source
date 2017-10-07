@@ -29,21 +29,48 @@
 // If you have any questions, please contact Tripwire, Inc. at either
 // info@tripwire.org or www.tripwire.org.
 //
-// tripwirestrings.cpp
+///////////////////////////////////////////////////////////////////////////////
+// syslog.cpp
 //
-#include "stdtripwire.h"
-#include "tripwirestrings.h"
 
-#if IS_AROS
-# define VERSION_PREFIX "$VER: "
-#else
-# define VERSION_PREFIX "@(#)"
+#include "stdengine.h"
+#include "syslog_trip.h" 
+
+#if HAVE_SYSLOG_H
+#include <syslog.h>
 #endif
 
+#if HAVE_SYS_SYSLOG_H
+#include <sys/syslog.h>
+#endif
 
-TSS_BeginStringtable( cTripwire )
+// next three includes are for error reporting
+#include "tw/twutil.h"
+#include "tw/twerrors.h"
+#include "tw/twstrings.h"
 
-    TSS_StringEntry( tripwire::STR_TRIPWIRE_VERSION,  _T("tripwire: File integrity assessment application.\n"))
+#if IS_AROS
+  #include <proto/bsdsocket.h>
+  #define openlog(a,b,c)
+  #define closelog()
+#endif
 
-TSS_EndStringtable( cTripwire )
+///////////////////////////////////////////////////////////////////////////////
+// Syslog
+///////////////////////////////////////////////////////////////////////////////
+void cSyslog::Log(const TCHAR* programName, cSyslog::LogType logType, const TCHAR* message)
+{
+// SkyOS has syslog.h but doesn't actually implement the calls.
+#if SUPPORTS_SYSLOG
+    
+    (void)logType; // logType is not used for Unix syslog
 
+    ASSERT(sizeof(TCHAR) == sizeof(char));
+    const char* ident = programName;
+    const char* msg = message;
+	
+    openlog(ident, LOG_PID, LOG_USER);
+    syslog(LOG_NOTICE, "%s", msg);
+    closelog();
+#endif
+}

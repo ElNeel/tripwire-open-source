@@ -105,13 +105,8 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(sbindir)" "$(DESTDIR)$(tripwiredir)"
 PROGRAMS = $(sbin_PROGRAMS)
-am_tripwire_OBJECTS = generatedb.$(OBJEXT) integritycheck.$(OBJEXT) \
-	mailmessage.$(OBJEXT) pipedmailmessage.$(OBJEXT) \
-	policyupdate.$(OBJEXT) smtpmailmessage.$(OBJEXT) \
-	stdtripwire.$(OBJEXT) syslog_trip.$(OBJEXT) tripwire.$(OBJEXT) \
-	tripwireerrors.$(OBJEXT) tripwiremain.$(OBJEXT) \
-	tripwirestrings.$(OBJEXT) tripwireutil.$(OBJEXT) \
-	twcmdline.$(OBJEXT) twcmdlineutil.$(OBJEXT) updatedb.$(OBJEXT)
+am_tripwire_OBJECTS = stdtripwire.$(OBJEXT) tripwire.$(OBJEXT) \
+	tripwiremain.$(OBJEXT) tripwirestrings.$(OBJEXT)
 tripwire_OBJECTS = $(am_tripwire_OBJECTS)
 tripwire_LDADD = $(LDADD)
 AM_V_P = $(am__v_P_@AM_V@)
@@ -232,7 +227,7 @@ INSTALL_SCRIPT = @INSTALL_SCRIPT@
 INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
 LDFLAGS = @LDFLAGS@ -L../../lib
 LIBOBJS = @LIBOBJS@
-LIBS = -ltripwire -lcryptlib @LIBS@
+LIBS = -ltripwire -lcryptlib -lengine @LIBS@
 LN = @LN@
 LN_S = @LN@
 LTLIBOBJS = @LTLIBOBJS@
@@ -316,15 +311,10 @@ AM_INSTALL_PROGRAM_FLAGS = -m 755
 AM_CPPFLAGS = -I$(srcdir)/..
 tripwiredir = .
 tripwire_SOURCES = \
-  generatedb.cpp integritycheck.cpp mailmessage.cpp pipedmailmessage.cpp \
-  policyupdate.cpp smtpmailmessage.cpp stdtripwire.cpp syslog_trip.cpp	 \
-  tripwire.cpp tripwireerrors.cpp tripwiremain.cpp tripwirestrings.cpp	 \
-  tripwireutil.cpp twcmdline.cpp twcmdlineutil.cpp updatedb.cpp
+  stdtripwire.cpp tripwire.cpp tripwiremain.cpp tripwirestrings.cpp
 
 tripwire_HEADERS = \
-  generatedb.h integritycheck.h mailmessage.h policyupdate.h resource.h \
-  stdtripwire.h syslog_trip.h tripwire.h tripwireerrors.h tripwiremsg.h \
-  tripwirestrings.h tripwireutil.h twcmdline.h twcmdlineutil.h updatedb.h
+  stdtripwire.h tripwire.h tripwirestrings.h
 
 CLEANFILES = ../../bin/tripwire ../../lib/libtripwire.a *.gcno *.gcda
 all: all-am

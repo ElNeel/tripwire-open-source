@@ -37,7 +37,6 @@
 //
 #include "stdtripwire.h"
 #include "tripwire.h"
-#include "tripwireerrors.h"
 
 #include "core/core.h"
 #include "db/db.h"
@@ -45,10 +44,9 @@
 #include "twparser/twparser.h"
 #include "tw/tw.h"
 #include "fco/fco.h"
-
-
 #include "fs/fs.h"
 #include "util/util.h"
+#include "engine/engine.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 // cTripwire
@@ -65,8 +63,7 @@ cTripwire::cTripwire()
     TSS_Dependency( cFCO );
     TSS_Dependency( cFS );
     TSS_Dependency( cUtil );
-    
-    TSS_REGISTER_PKG_ERRORS( tripwire )
+    TSS_Dependency( cEngine );
 }
 
 

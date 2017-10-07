@@ -536,6 +536,7 @@ src/Makefile
 src/cryptlib/Makefile
 src/core/Makefile
 src/db/Makefile
+src/engine/Makefile
 src/fco/Makefile
 src/fs/Makefile
 src/tw/Makefile

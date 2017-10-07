@@ -29,12 +29,12 @@
 // If you have any questions, please contact Tripwire, Inc. at either
 // info@tripwire.org or www.tripwire.org.
 //
-#include "stdtripwire.h"
+#include "stdengine.h"
 #include "core/debug.h"
 #include "mailmessage.h"
 #include "core/fsservices.h"
 
-#include "tripwirestrings.h"
+#include "enginestrings.h"
 #include "core/msystem.h"
 #include "core/stringutil.h"
 #include "tw/configfile.h"
@@ -165,7 +165,7 @@ void cPipedMailMessage::SendInit()// throw( eMailMessageError )
     if(! mpFile)
     {
         TOSTRINGSTREAM estr;
-        estr << TSS_GetString( cTripwire, tripwire::STR_ERR2_MAIL_MESSAGE_COMMAND ) 
+        estr << TSS_GetString( cEngine, engine::STR_ERR2_MAIL_MESSAGE_COMMAND ) 
              << mstrSendMailExePath;
 
         throw eMailPipedOpen( estr.str() );
@@ -179,7 +179,7 @@ void cPipedMailMessage::SendString( const TSTRING& s )
     if( _ftprintf( mpFile, "%s", s.c_str() ) < 0 )
     {
         TOSTRINGSTREAM estr;
-        estr << TSS_GetString( cTripwire, tripwire::STR_ERR2_MAIL_MESSAGE_COMMAND ) 
+        estr << TSS_GetString( cEngine, engine::STR_ERR2_MAIL_MESSAGE_COMMAND ) 
              << mstrSendMailExePath;
 
         throw eMailPipedOpen( estr.str() );
@@ -201,7 +201,7 @@ void cPipedMailMessage::SendFinit() //throw ( eMailMessageError )
         if( result != 0 )
         {
             TOSTRINGSTREAM estr;
-        estr << TSS_GetString( cTripwire, tripwire::STR_ERR2_MAIL_MESSAGE_COMMAND ) 
+        estr << TSS_GetString( cEngine, engine::STR_ERR2_MAIL_MESSAGE_COMMAND ) 
                  << mstrSendMailExePath;
 
             // uh oh! something bad has happened!

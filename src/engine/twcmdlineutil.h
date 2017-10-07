@@ -36,7 +36,7 @@
 #ifndef __TWCMDLINEUTIL_H
 #define __TWCMDLINEUTIL_H
 
-#include "mailmessage.h"
+#include "engine/mailmessage.h"
 #include "core/error.h"
 
 class cFCOSpecList;

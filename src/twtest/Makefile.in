@@ -122,18 +122,19 @@ am_twtest_OBJECTS = archive_t.$(OBJEXT) blockfile_t.$(OBJEXT) \
 	fileheader_t.$(OBJEXT) fileutil_t.$(OBJEXT) \
 	fsdatasourceiter_t.$(OBJEXT) fsobject_t.$(OBJEXT) \
 	fspropcalc_t.$(OBJEXT) fspropdisplayer_t.$(OBJEXT) \
-	fspropset_t.$(OBJEXT) fsspec_t.$(OBJEXT) genre_t.$(OBJEXT) \
+	fspropset_t.$(OBJEXT) fsspec_t.$(OBJEXT) \
+	generatedb_t.$(OBJEXT) genre_t.$(OBJEXT) \
 	genrespeclist_t.$(OBJEXT) genreswitcher_t.$(OBJEXT) \
 	growheap_t.$(OBJEXT) hashtable_t.$(OBJEXT) \
-	hierdatabase_t.$(OBJEXT) keyfile_t.$(OBJEXT) \
-	platform_t.$(OBJEXT) policyparser_t.$(OBJEXT) \
-	refcountobj_t.$(OBJEXT) resources_t.$(OBJEXT) \
-	serializer_t.$(OBJEXT) serializerimpl_t.$(OBJEXT) \
-	signature_t.$(OBJEXT) srefcountobj_t.$(OBJEXT) \
-	stdtest.$(OBJEXT) stringencoder_t.$(OBJEXT) \
-	tasktimer_t.$(OBJEXT) tchar_t.$(OBJEXT) test.$(OBJEXT) \
-	textreportviewer_t.$(OBJEXT) twlocale_t.$(OBJEXT) \
-	twutil_t.$(OBJEXT) types_t.$(OBJEXT) \
+	hierdatabase_t.$(OBJEXT) integritycheck_t.$(OBJEXT) \
+	keyfile_t.$(OBJEXT) platform_t.$(OBJEXT) \
+	policyparser_t.$(OBJEXT) refcountobj_t.$(OBJEXT) \
+	resources_t.$(OBJEXT) serializer_t.$(OBJEXT) \
+	serializerimpl_t.$(OBJEXT) signature_t.$(OBJEXT) \
+	srefcountobj_t.$(OBJEXT) stdtest.$(OBJEXT) \
+	stringencoder_t.$(OBJEXT) tasktimer_t.$(OBJEXT) \
+	tchar_t.$(OBJEXT) test.$(OBJEXT) textreportviewer_t.$(OBJEXT) \
+	twlocale_t.$(OBJEXT) twutil_t.$(OBJEXT) types_t.$(OBJEXT) \
 	unixfsservices_t.$(OBJEXT) usernotifystdout_t.$(OBJEXT) \
 	wchar16_t.$(OBJEXT)
 twtest_OBJECTS = $(am_twtest_OBJECTS)
@@ -268,7 +269,7 @@ INSTALL_SCRIPT = @INSTALL_SCRIPT@
 INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
 LDFLAGS = @LDFLAGS@ -L../../lib
 LIBOBJS = @LIBOBJS@
-LIBS = -ltripwire -lcryptlib @LIBS@
+LIBS = -ltripwire -lcryptlib -lengine @LIBS@
 LN = @LN@
 LN_S = @LN@
 LTLIBOBJS = @LTLIBOBJS@
@@ -389,12 +390,14 @@ fspropcalc_t.cpp \
 fspropdisplayer_t.cpp \
 fspropset_t.cpp \
 fsspec_t.cpp \
+generatedb_t.cpp \
 genre_t.cpp \
 genrespeclist_t.cpp \
 genreswitcher_t.cpp \
 growheap_t.cpp \
 hashtable_t.cpp \
 hierdatabase_t.cpp \
+integritycheck_t.cpp \
 keyfile_t.cpp \
 platform_t.cpp \
 policyparser_t.cpp \

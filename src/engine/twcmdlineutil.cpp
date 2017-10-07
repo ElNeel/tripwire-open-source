@@ -30,7 +30,7 @@
 // info@tripwire.org or www.tripwire.org.
 //
 // twcmdlineutil.cpp
-#include "stdtripwire.h"
+#include "stdengine.h"
 
 #include "twcmdlineutil.h"
 
@@ -47,12 +47,12 @@
 #include "tw/textreportviewer.h"
 #include "core/archive.h"
 #include <fstream>            // used to open plain text policy file
-#include "mailmessage.h"         // used for email reporting
+#include "engine/mailmessage.h"         // used for email reporting
 #include "fco/twfactory.h"
-#include "tripwirestrings.h"
+#include "enginestrings.h"
 #include "twcmdline.h"
 #include "fco/fcospecutil.h"
-#include "integritycheck.h"
+#include "engine/integritycheck.h"
 #include "fco/genreswitcher.h"
 #include "tw/fcodatabasefile.h"
 #include "core/errorgeneral.h"
@@ -236,7 +236,7 @@ void cTWCmdLineUtil::TrimPropsFromSpecs(cFCOSpecList& specList, const TSTRING& p
    d.TraceDebug("We are ignoring these properties:\n");
    v.TraceContents();
 
-   iUserNotify::GetInstance()->Notify(1, _T("%s %s\n"), TSS_GetString( cTripwire, tripwire::STR_IGNORE_PROPS).c_str(),
+   iUserNotify::GetInstance()->Notify(1, _T("%s %s\n"), TSS_GetString( cEngine, engine::STR_IGNORE_PROPS).c_str(),
                                            cDisplayEncoder::EncodeInline( ignoreStr ).c_str());
    
 
@@ -263,7 +263,7 @@ void cTWCmdLineUtil::TrimSpecsByName(cFCOSpecList& specList, const TSTRING specN
 {
    iUserNotify::GetInstance()->Notify( iUserNotify::V_NORMAL, 
                               _T("%s%s\n"), 
-                              TSS_GetString( cTripwire, tripwire::STR_CHECKING_SPECS_NAMED).c_str(),
+                              TSS_GetString( cEngine, engine::STR_CHECKING_SPECS_NAMED).c_str(),
                               cDisplayEncoder::EncodeInline( specName ).c_str());
 
    cFCOSpecListAddedIter iter(specList);
@@ -293,7 +293,7 @@ void cTWCmdLineUtil::TrimSpecsBySeverity(cFCOSpecList& specList, int severity)
    d.TraceDebug("Entering; severity=%d\n", severity);
    iUserNotify::GetInstance()->Notify( iUserNotify::V_NORMAL, 
                               _T("%s%d\n"), 
-                              TSS_GetString( cTripwire, tripwire::STR_IC_SEVERITY_LEVEL).c_str(),
+                              TSS_GetString( cEngine, engine::STR_IC_SEVERITY_LEVEL).c_str(),
                               severity);
    
    cFCOSpecListAddedIter iter(specList);
@@ -304,7 +304,7 @@ void cTWCmdLineUtil::TrimSpecsBySeverity(cFCOSpecList& specList, int severity)
          d.TraceDetail("Removing spec %s (severity=%d)\n",  iter.Spec()->GetStartPoint().AsString().c_str(), 
                                                 iter.Attr()->GetSeverity());
 
-         TW_NOTIFY_VERBOSE(   TSS_GetString( cTripwire, tripwire::STR_IC_IGNORING_SEVERITY).c_str(), 
+         TW_NOTIFY_VERBOSE(   TSS_GetString( cEngine, engine::STR_IC_IGNORING_SEVERITY).c_str(), 
                         iTWFactory::GetInstance()->GetNameTranslator()->ToStringDisplay
                            ( iter.Spec()->GetStartPoint() ).c_str(),
                         iter.Attr()->GetSeverity());
@@ -570,7 +570,7 @@ static bool EmailReportTo(const TSTRING &toAddress, const cFCOReportHeader& head
         {
           // print message that we're emailing to this specific recipient
           iUserNotify::GetInstance()->Notify( iUserNotify::V_NORMAL, _T("%s %s\n"), 
-                                              TSS_GetString( cTripwire, tripwire::STR_EMAIL_REPORT_TO).c_str(), 
+                                              TSS_GetString( cEngine, engine::STR_EMAIL_REPORT_TO).c_str(), 
                                               cDisplayEncoder::EncodeInline( toAddress ).c_str());
           reportMail->AddRecipient(toAddress);
 
@@ -580,7 +580,7 @@ static bool EmailReportTo(const TSTRING &toAddress, const cFCOReportHeader& head
       {
               TSTRING machineName;
               iFSServices::GetInstance()->GetMachineNameFullyQualified(machineName);
-              reportMail->SetFrom(TSS_GetString( cTripwire, tripwire::STR_EMAIL_FROM) + machineName);
+              reportMail->SetFrom(TSS_GetString( cEngine, engine::STR_EMAIL_FROM) + machineName);
       }     
 
           reportMail->SetFromName(TSS_GetString(cTW, tw::STR_TSS_PRODUCT_NAME));
@@ -603,7 +603,7 @@ static bool EmailReportTo(const TSTRING &toAddress, const cFCOReportHeader& head
     {
       e.SetFatality( false ); // we want to continue from email errors, so make them non-fatal
       cTWUtil::PrintErrorMsg(e);
-      TCERR << TSS_GetString( cTripwire, tripwire::STR_ERR_EMAIL_REPORT) << std::endl;
+      TCERR << TSS_GetString( cEngine, engine::STR_ERR_EMAIL_REPORT) << std::endl;
       // delete temp file
       iFSServices::GetInstance()->FileDelete( strTempFilename );
       return false;
@@ -646,8 +646,8 @@ bool cTWCmdLineUtil::EmailReport(const cFCOReportHeader& header, const cFCORepor
 {
   // print message that says that we're emailing
   iUserNotify::GetInstance()->Notify( iUserNotify::V_NORMAL, _T("%s\n"), 
-                                      TSS_GetString( cTripwire, 
-                                                     tripwire::STR_EMAIL_BEGIN).c_str());
+                                      TSS_GetString( cEngine, 
+                                                     engine::STR_EMAIL_BEGIN).c_str());
 
   bool emailSent = false;
   bool ret = true;
@@ -677,7 +677,7 @@ bool cTWCmdLineUtil::EmailReport(const cFCOReportHeader& header, const cFCORepor
 
     // Send a message to the user, alerting them that no email has been sent.
     iUserNotify::GetInstance()->Notify( iUserNotify::V_NORMAL, _T("%s\n"), 
-                                        TSS_GetString( cTripwire, tripwire::STR_NO_EMAIL_RECIPIENTS).c_str());
+                                        TSS_GetString( cEngine, engine::STR_NO_EMAIL_RECIPIENTS).c_str());
   }
   
   return ret;
@@ -706,7 +706,7 @@ bool cTWCmdLineUtil::SendEmailTestMessage(const TSTRING &mAddress, const cTWMode
 
    // print message that we're emailing to this specific recipient
    iUserNotify::GetInstance()->Notify( iUserNotify::V_NORMAL, _T("%s %s\n"), 
-                              TSS_GetString( cTripwire, tripwire::STR_TEST_EMAIL_TO).c_str(), 
+                              TSS_GetString( cEngine, engine::STR_TEST_EMAIL_TO).c_str(), 
                                         cDisplayEncoder::EncodeInline( mAddress ).c_str());
 
    // send the report
@@ -721,19 +721,19 @@ bool cTWCmdLineUtil::SendEmailTestMessage(const TSTRING &mAddress, const cTWMode
        {    
            TSTRING machineName;
            iFSServices::GetInstance()->GetMachineNameFullyQualified(machineName);
-           reportMail->SetFrom(TSS_GetString( cTripwire, tripwire::STR_EMAIL_FROM) + machineName);
+           reportMail->SetFrom(TSS_GetString( cEngine, engine::STR_EMAIL_FROM) + machineName);
        }
         
        reportMail->SetFromName(TSS_GetString(cTW, tw::STR_TSS_PRODUCT_NAME));
 
-       reportMail->SetSubject   (TSS_GetString( cTripwire, tripwire::STR_TEST_EMAIL_SUBJECT));
-       reportMail->SetBody      (TSS_GetString( cTripwire, tripwire::STR_TEST_EMAIL_BODY));
+       reportMail->SetSubject   (TSS_GetString( cEngine, engine::STR_TEST_EMAIL_SUBJECT));
+       reportMail->SetBody      (TSS_GetString( cEngine, engine::STR_TEST_EMAIL_BODY));
        reportMail->Send();
    }
    catch(eError& e)
    {
       cTWUtil::PrintErrorMsg(e);
-      TCERR << TSS_GetString( cTripwire, tripwire::STR_ERR_EMAIL_TEST) << std::endl;
+      TCERR << TSS_GetString( cEngine, engine::STR_ERR_EMAIL_TEST) << std::endl;
       return false;
    }
 

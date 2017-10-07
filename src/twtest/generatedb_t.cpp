@@ -29,12 +29,10 @@
 // If you have any questions, please contact Tripwire, Inc. at either
 // info@tripwire.org or www.tripwire.org.
 //
-// integritycheck_t.cpp
+// generatedb_t
 
-#include "stdtripwire.h"
-#include "integritycheck.h"
-
-#include "generatedb.h"
+#include "engine/stdengine.h"
+#include "engine/generatedb.h"
 #include "core/fsservices.h"
 #include "core/debug.h"
 #include "core/errorbucketimpl.h"
@@ -42,58 +40,59 @@
 #include "fco/fcospeclist.h"
 #include "fco/twfactory.h"
 #include "fco/fconameinfo.h"
+#include "fco/genreswitcher.h"
 #include "db/hierdatabase.h"
-#include "parser/policyparser.h"
-#include "test/test.h"
-#include "tw/textreportviewer.h"
-
+#include "twparser/policyparser.h"
+#include "twtest/test.h"
 
 #include <fstream>
 
-void TestIntegrityCheck()
+void TestGenerateDb()
 {
-    cDebug d("TestIntegrityCheck");
+    skip("This test needs to be reworked");
 
-    try
-    {
-        cFCOReport      report;
-        cGenreSpecListVector slv;
-        cErrorTracer    et;
-        iFCONameInfo*   pInfo = iTWFactory::GetInstance()->GetNameInfo();
-        cHierDatabase   db( pInfo->IsCaseSensitive(), pInfo->GetDelimitingChar() );
-        db.Open( _T("c:/tmp/tw.db"), 5, false );
-        //
-        // make some specs...
-        //
-        std::ifstream in;
-        in.open("c:/tmp/pol.pol");      
-        if(in.fail())
-        {
-            d.TraceError( "Unable to open policy file!\n" );
-            TEST( false );
-            return;
-        }
-        cPolicyParser parser(in);
-        parser.Execute(slv, &et);
-        
-        //
-        // ok, time to integrity check!
-        //
-        cGenreSpecListVector::iterator at;
-        for( at = slv.begin(); at != slv.end(); ++at )
-        {
-            cIntegrityCheck ic( at->GetGenre(), at->GetSpecList(), db, report, &et );
-            ic.Execute();
-        }
+    cDebug d("TestGenerateDb");
+    TSTRING db_path     = TwTestPath("gendb.twd");
+    TSTRING policy_path = TwTestPath("gendb.pol");
 
-        //
-        // finally, let's print out the report...
-        //
-        report.TraceContents();
-        
-    }
-    catch( eError& e )
+    iFCONameInfo*   pInfo = iTWFactory::GetInstance()->GetNameInfo();
+    cErrorTracer    et;
+    cHierDatabase   db( pInfo->IsCaseSensitive(), pInfo->GetDelimitingChar() );
+    db.Open(db_path.c_str(), 5, true );
+    cHierDatabase::iterator iter( &db );
+    //
+    // make some specs...
+    //
+    cGenreSpecListVector slv;
+    std::ifstream in;
+    in.open(policy_path.c_str());
+    if(in.fail())
     {
-        d.TraceError( "*** Caught Exception: %d %s\n", e.GetID(), e.GetMsg().c_str() );
+        d.TraceError( "Unable to open policy file!\n" );
+        TEST( false );
+        return;
     }
+    cPolicyParser parser(in);
+    parser.Execute(slv, &et);
+    
+    //
+    // ok, time to integrity check!
+    //
+    cGenreSpecListVector::iterator at;
+    for( at = slv.begin(); at != slv.end(); ++at )
+    {
+        cGenerateDb::Execute( 
+                                at->GetSpecList(), 
+                                db,
+                                cGenreSwitcher::GetInstance()->GetFactoryForGenre( at->GetGenre() )->CreatePropDisplayer(), 
+                                &et 
+                            );
+    }   
+
 }
+
+void RegisterSuite_GenerateDb()
+{
+    RegisterTest("GenerateDb", "Basic", TestGenerateDb);
+}
+

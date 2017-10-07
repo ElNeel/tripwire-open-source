@@ -30,22 +30,22 @@
 // info@tripwire.org or www.tripwire.org.
 //
 //////////////////////////////////////////////////////////////////////
-// tripwireerrors.cpp
+// engineerrors.cpp
 //
-// Registers all error strings in the tripwire package
+// Registers all error strings in the engine package
 //
 
-#include "stdtripwire.h"
-#include "tripwireerrors.h"
+#include "stdengine.h"
+#include "engineerrors.h"
 
-#include "mailmessage.h"
-#include "policyupdate.h"
-#include "updatedb.h"
-#include "integritycheck.h"
-#include "twcmdline.h"
-#include "twcmdlineutil.h"
+#include "engine/mailmessage.h"
+#include "engine/policyupdate.h"
+#include "engine/updatedb.h"
+#include "engine/integritycheck.h"
+#include "engine/twcmdline.h"
+#include "engine/twcmdlineutil.h"
 
-TSS_BEGIN_ERROR_REGISTRATION( tripwire )
+TSS_BEGIN_ERROR_REGISTRATION( engine )
 
 // MailMessage
 TSS_REGISTER_ERROR( eMailMessageError(),            _T("Mail message error.") );
@@ -101,5 +101,5 @@ TSS_REGISTER_ERROR( eTWInvalidTempDirectory(),      _T("Cannot access temp direc
 
 TSS_REGISTER_ERROR( eTWSyslogNotSupported(),        _T("Syslog reporting is not supported on this platform.") );
 TSS_REGISTER_ERROR( eTWDirectIONotSupported(),      _T("Direct I/O hashing is not supported on this platform.") );
-                   
+
 TSS_END_ERROR_REGISTRATION()

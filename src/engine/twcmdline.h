@@ -46,7 +46,7 @@
 #endif
 
 #ifndef __MAILMESSAGE_H
-#include "mailmessage.h"         // used for email reporting
+#include "engine/mailmessage.h"         // used for email reporting
 #endif
 
 #ifndef __TEXTREPORTVIEWER_H     // for multiple levels of reporting

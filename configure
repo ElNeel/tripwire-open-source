@@ -7353,7 +7353,7 @@ ac_config_commands="$ac_config_commands mk_bin"
 
 
 
-ac_config_files="$ac_config_files Makefile man/Makefile man/man4/Makefile man/man5/Makefile man/man8/Makefile src/Makefile src/cryptlib/Makefile src/core/Makefile src/db/Makefile src/fco/Makefile src/fs/Makefile src/tw/Makefile src/twcrypto/Makefile src/twparser/Makefile src/util/Makefile src/twprint/Makefile src/twadmin/Makefile src/siggen/Makefile src/tripwire/Makefile src/twtest/Makefile"
+ac_config_files="$ac_config_files Makefile man/Makefile man/man4/Makefile man/man5/Makefile man/man8/Makefile src/Makefile src/cryptlib/Makefile src/core/Makefile src/db/Makefile src/engine/Makefile src/fco/Makefile src/fs/Makefile src/tw/Makefile src/twcrypto/Makefile src/twparser/Makefile src/util/Makefile src/twprint/Makefile src/twadmin/Makefile src/siggen/Makefile src/tripwire/Makefile src/twtest/Makefile"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -8098,6 +8098,7 @@ do
     "src/cryptlib/Makefile") CONFIG_FILES="$CONFIG_FILES src/cryptlib/Makefile" ;;
     "src/core/Makefile") CONFIG_FILES="$CONFIG_FILES src/core/Makefile" ;;
     "src/db/Makefile") CONFIG_FILES="$CONFIG_FILES src/db/Makefile" ;;
+    "src/engine/Makefile") CONFIG_FILES="$CONFIG_FILES src/engine/Makefile" ;;
     "src/fco/Makefile") CONFIG_FILES="$CONFIG_FILES src/fco/Makefile" ;;
     "src/fs/Makefile") CONFIG_FILES="$CONFIG_FILES src/fs/Makefile" ;;
     "src/tw/Makefile") CONFIG_FILES="$CONFIG_FILES src/tw/Makefile" ;;

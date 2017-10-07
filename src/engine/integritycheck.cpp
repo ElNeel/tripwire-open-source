@@ -30,8 +30,8 @@
 // info@tripwire.org or www.tripwire.org.
 //
 // integritycheck.cpp
-#include "stdtripwire.h"
-#include "tripwirestrings.h"
+#include "stdengine.h"
+#include "enginestrings.h"
 #include "integritycheck.h"
 #include "fco/twfactory.h"
 #include "tw/fcoreport.h"
@@ -157,7 +157,7 @@ void cIntegrityCheck::ProcessChangedFCO( cDbDataSourceIter dbIter, iFCODataSourc
         // here we will actually compare the two FCOs
         //
         TW_NOTIFY_VERBOSE(  _T("--- %s%s\n"), 
-                            TSS_GetString( cTripwire, tripwire::STR_NOTIFY_CHECKING ).c_str(),
+                            TSS_GetString( cEngine, engine::STR_NOTIFY_CHECKING ).c_str(),
                             iTWFactory::GetInstance()->GetNameTranslator()->ToStringDisplay
                                 ( pIter->GetName() ).c_str() );
 
@@ -212,7 +212,7 @@ void cIntegrityCheck::ProcessChangedFCO( cDbDataSourceIter dbIter, iFCODataSourc
             dbIter.SetFCOData( pOldFCO );
 
             TW_NOTIFY_VERBOSE(  _T("%s%s\n"), 
-                                TSS_GetString( cTripwire, tripwire::STR_NOTIFY_DB_CHANGING ).c_str(),
+                                TSS_GetString( cEngine, engine::STR_NOTIFY_DB_CHANGING ).c_str(),
                                 iTWFactory::GetInstance()->GetNameTranslator()->ToStringDisplay
                                     ( pOldFCO->GetName() ).c_str() );
 
@@ -501,7 +501,7 @@ void cIntegrityCheck::Execute( uint32 flags )
     
         // verbose output
         TW_NOTIFY_VERBOSE(  _T("%s%s\n"), 
-                            TSS_GetString( cTripwire, tripwire::STR_NOTIFY_CHECKING_RULE ).c_str(),
+                            TSS_GetString( cEngine, engine::STR_NOTIFY_CHECKING_RULE ).c_str(),
                             iTWFactory::GetInstance()->GetNameTranslator()->ToStringDisplay
                                 ( mpCurSpec->GetStartPoint() ).c_str() );
         //  
@@ -596,7 +596,7 @@ void cIntegrityCheck::ExecuteOnObjectList( const std::list<cFCOName>& fcoNames, 
     for( it = fcoNames.begin(); it != fcoNames.end(); ++it )
     {
         TW_NOTIFY_VERBOSE(  _T("%s%s\n"), 
-                            TSS_GetString( cTripwire, tripwire::STR_NOTIFY_CHECKING ).c_str(),
+                            TSS_GetString( cEngine, engine::STR_NOTIFY_CHECKING ).c_str(),
                             pTrans->ToStringDisplay( *it ).c_str() );
         //
         // figure out which spec this fco belongs in...

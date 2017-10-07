@@ -29,21 +29,32 @@
 // If you have any questions, please contact Tripwire, Inc. at either
 // info@tripwire.org or www.tripwire.org.
 //
-// tripwirestrings.cpp
 //
-#include "stdtripwire.h"
-#include "tripwirestrings.h"
+// Name....: engine.h
+// Date....: 10/02/17
+// Creator.: bcox
+//
+//
 
-#if IS_AROS
-# define VERSION_PREFIX "$VER: "
-#else
-# define VERSION_PREFIX "@(#)"
-#endif
+#ifndef __ENGINE_H
+#define __ENGINE_H
+
+//--Include Core Platform Declarations
+#include "core/core.h"
+#include "core/package.h"   // for: Packaging Abstraction
+
+//--Classes
+
+TSS_BeginPackage( cEngine )
+
+    TSS_DECLARE_STRINGTABLE;
+
+    public:
+
+        cEngine();
+
+TSS_EndPackage( cEngine )
 
 
-TSS_BeginStringtable( cTripwire )
-
-    TSS_StringEntry( tripwire::STR_TRIPWIRE_VERSION,  _T("tripwire: File integrity assessment application.\n"))
-
-TSS_EndStringtable( cTripwire )
+#endif //__ENGINE_H
 

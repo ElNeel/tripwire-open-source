@@ -29,7 +29,7 @@
 // If you have any questions, please contact Tripwire, Inc. at either
 // info@tripwire.org or www.tripwire.org.
 //
-#include "stdtripwire.h"
+#include "stdengine.h"
 #include "core/debug.h"
 #include "mailmessage.h"
 #include <locale.h>

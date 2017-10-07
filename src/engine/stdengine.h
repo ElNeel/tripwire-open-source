@@ -29,19 +29,17 @@
 // If you have any questions, please contact Tripwire, Inc. at either
 // info@tripwire.org or www.tripwire.org.
 //
-//{{NO_DEPENDENCIES}}
-// Microsoft Developer Studio generated include file.
-// Used by Script1.rc
+//
+// Name....: stdengine.h
+// Date....: 10/02/17
+// Creator.: bcox
+//
 //
 
-// Next default values for new objects
-// 
-#ifdef APSTUDIO_INVOKED
-#ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        102
-#define _APS_NEXT_COMMAND_VALUE         40001
-#define _APS_NEXT_CONTROL_VALUE         1000
-#define _APS_NEXT_SYMED_VALUE           101
-#endif
-#endif
+#ifndef __STDENGINE_H
+#define __STDENGINE_H
+
+#include "core/stdcore.h"
+
+#endif //__STDENGINE_H
 

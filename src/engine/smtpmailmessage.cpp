@@ -29,12 +29,12 @@
 // If you have any questions, please contact Tripwire, Inc. at either
 // info@tripwire.org or www.tripwire.org.
 //
-#include "stdtripwire.h"
+#include "stdengine.h"
 #include "core/debug.h"
 #include "mailmessage.h"
 #include "tw/configfile.h"
 #include "tw/twutil.h"
-#include "tripwirestrings.h"
+#include "enginestrings.h"
 #include "core/stringutil.h"
 #include <sstream>
 #include "core/msystem.h"
@@ -222,7 +222,7 @@ bool cSMTPMailMessage::OpenConnection()
         DecodeError();
 
         TOSTRINGSTREAM estr;
-        estr << TSS_GetString( cTripwire, tripwire::STR_ERR2_MAIL_MESSAGE_SERVER ) 
+        estr << TSS_GetString( cEngine, engine::STR_ERR2_MAIL_MESSAGE_SERVER ) 
              << mstrServerName;
 
         throw eMailSMTPIPUnresolvable(estr.str());
@@ -245,7 +245,7 @@ bool cSMTPMailMessage::OpenConnection()
         DecodeError();
 
         TOSTRINGSTREAM estr;
-        estr << TSS_GetString( cTripwire, tripwire::STR_ERR2_MAIL_MESSAGE_SERVER ) 
+        estr << TSS_GetString( cEngine, engine::STR_ERR2_MAIL_MESSAGE_SERVER ) 
              << mstrServerName;
 
         throw eMailSMTPOpenConnection(estr.str());
@@ -530,7 +530,7 @@ bool cSMTPMailMessage::GetAcknowledgement()
     {
         // Error codes other than 200-399 indicate an error or a failure.  See RFC 821
         TOSTRINGSTREAM estr;
-        estr << TSS_GetString( cTripwire, tripwire::STR_ERR2_MAIL_MESSAGE_SERVER_RETURNED_ERROR ) 
+        estr << TSS_GetString( cEngine, engine::STR_ERR2_MAIL_MESSAGE_SERVER_RETURNED_ERROR ) 
              << sRecvString;
 
         throw eMailSMTPServer(estr.str());

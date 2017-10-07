@@ -29,21 +29,40 @@
 // If you have any questions, please contact Tripwire, Inc. at either
 // info@tripwire.org or www.tripwire.org.
 //
-// tripwirestrings.cpp
 //
-#include "stdtripwire.h"
-#include "tripwirestrings.h"
+// Name....: engine.cpp
+// Date....: 10/02/17
+// Creator.: bcox
 
-#if IS_AROS
-# define VERSION_PREFIX "$VER: "
-#else
-# define VERSION_PREFIX "@(#)"
-#endif
+//
+//
+#include "stdengine.h"
+#include "engine.h"
+#include "core/core.h"
+#include "db/db.h"
+#include "twcrypto/twcrypto.h"
+#include "twparser/twparser.h"
+#include "tw/tw.h"
+#include "fco/fco.h"
+#include "fs/fs.h"
+#include "util/util.h"
+#include "engineerrors.h"
+
+TSS_ImplementPackage( cEngine )
+
+cEngine::cEngine()
+{
+    TSS_Dependency( cCore );
+    TSS_Dependency( cDb );
+    TSS_Dependency( cTWCrypto );
+    TSS_Dependency( cTWParser );
+    TSS_Dependency( cTW );
+    TSS_Dependency( cFCO );
+    TSS_Dependency( cFS );
+    TSS_Dependency( cUtil );
+
+    TSS_REGISTER_PKG_ERRORS( engine )
+}
 
 
-TSS_BeginStringtable( cTripwire )
-
-    TSS_StringEntry( tripwire::STR_TRIPWIRE_VERSION,  _T("tripwire: File integrity assessment application.\n"))
-
-TSS_EndStringtable( cTripwire )
 

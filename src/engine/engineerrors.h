@@ -30,18 +30,19 @@
 // info@tripwire.org or www.tripwire.org.
 //
 //
-// Name....: tripwireerrors.h
-// Date....: 5/17/99
-// Creator.: Matthew Brinkley (brinkley)
+// Name....: engineerrors.h
+// Date....: 10/02/17
+// Creator.: bcox
 //
 //
 
-#ifndef __TRIPWIREERRORS_H
-#define __TRIPWIREERRORS_H
+#ifndef __ENGINEERRORS_H
+#define __ENGINEERRORS_H
 
 #include "core/errortable.h"
 
-TSS_DECLARE_ERROR_REGISTRATION( tripwire )
+TSS_DECLARE_ERROR_REGISTRATION( engine )
+    
 
-#endif//__TRIPWIREERRORS_H
+#endif//__ENGINEERRORS_H
 

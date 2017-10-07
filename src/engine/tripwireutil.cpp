@@ -30,7 +30,7 @@
 // info@tripwire.org or www.tripwire.org.
 //
 // tripwireutil.cpp
-#include "stdtripwire.h"
+#include "stdengine.h"
 #include "tripwireutil.h"
 #include "tw/fcodatabasefile.h"
 #include "fco/fcospeclist.h"
@@ -42,7 +42,7 @@
 #include "fco/fcopropdisplayer.h"
 #include "fco/fconame.h"
 #include "tw/dbdatasource.h"
-#include "tripwirestrings.h"
+#include "enginestrings.h"
 
 // for verbose output
 #include "core/usernotify.h"
@@ -56,7 +56,7 @@ void cTripwireUtil::CalcProps( iFCO* pFCO, const iFCOSpec* pSpec, iFCOPropCalc* 
 {
     // verbose output...
     TW_NOTIFY_VERBOSE(  _T("--- %s%s\n"), 
-                        TSS_GetString( cTripwire, tripwire::STR_NOTIFY_GEN_SIG ).c_str(), 
+                        TSS_GetString( cEngine, engine::STR_NOTIFY_GEN_SIG ).c_str(), 
                         iTWFactory::GetInstance()->GetNameTranslator()->ToStringDisplay
                             ( pFCO->GetName() ).c_str() );
 

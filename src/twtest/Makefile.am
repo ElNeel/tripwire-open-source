@@ -2,7 +2,7 @@ AUTOMAKE_OPTIONS = foreign no-dependencies
 AM_INSTALL_PROGRAM_FLAGS = -m 755
 
 AM_CPPFLAGS = -I$(srcdir)/..
-LIBS = -ltripwire -lcryptlib @LIBS@
+LIBS = -ltripwire -lcryptlib -lengine @LIBS@
 LDFLAGS = @LDFLAGS@ -L../../lib
 LN_S = @LN@
 
@@ -48,12 +48,14 @@ fspropcalc_t.cpp \
 fspropdisplayer_t.cpp \
 fspropset_t.cpp \
 fsspec_t.cpp \
+generatedb_t.cpp \
 genre_t.cpp \
 genrespeclist_t.cpp \
 genreswitcher_t.cpp \
 growheap_t.cpp \
 hashtable_t.cpp \
 hierdatabase_t.cpp \
+integritycheck_t.cpp \
 keyfile_t.cpp \
 platform_t.cpp \
 policyparser_t.cpp \

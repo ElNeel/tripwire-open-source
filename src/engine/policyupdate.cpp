@@ -30,7 +30,7 @@
 // info@tripwire.org or www.tripwire.org.
 //
 // policyupdate.cpp
-#include "stdtripwire.h"
+#include "stdengine.h"
 #include "policyupdate.h"
 #include "tw/fcoreport.h"
 #include "core/errorbucketimpl.h"
@@ -40,7 +40,7 @@
 #include "fco/iterproxy.h"
 #include "fco/fcopropset.h"
 #include "tripwireutil.h"
-#include "tripwirestrings.h"
+#include "enginestrings.h"
 #include "fco/twfactory.h"
 #include "fco/fconametranslator.h"
 #include "fco/genreswitcher.h"
@@ -102,7 +102,7 @@ static void util_PruneExtraObjects( cDbDataSourceIter iter, cFCOSpecListCanonica
             if( ! bFoundSpec )
             {
                 TW_NOTIFY_VERBOSE(  _T("--- %s%s\n"), 
-                                    TSS_GetString( cTripwire, tripwire::STR_NOTIFY_DB_REMOVING ).c_str(),
+                                    TSS_GetString( cEngine, engine::STR_NOTIFY_DB_REMOVING ).c_str(),
                                     iTWFactory::GetInstance()->GetNameTranslator()->ToStringDisplay
                                         ( iter.GetName() ).c_str() );
                 iter.RemoveFCOData();
@@ -157,9 +157,9 @@ bool cPolicyUpdate::Execute( uint32 flags )  // throw (eError)
 
     // first, do the integrity check with the new database...
     //
-    TW_NOTIFY_NORMAL(   TSS_GetString( cTripwire, tripwire::STR_PU_PROCESSING_GENRE ).c_str(),
+    TW_NOTIFY_NORMAL(   TSS_GetString( cEngine, engine::STR_PU_PROCESSING_GENRE ).c_str(),
                         cGenreSwitcher::GetInstance()->GenreToString( cGenreSwitcher::GetInstance()->CurrentGenre(), true ) );
-    TW_NOTIFY_NORMAL(   TSS_GetString( cTripwire, tripwire::STR_PU_INTEGRITY_CHECK ).c_str() );
+    TW_NOTIFY_NORMAL(   TSS_GetString( cEngine, engine::STR_PU_INTEGRITY_CHECK ).c_str() );
     //
     iFCONameTranslator* pTrans = iTWFactory::GetInstance()->GetNameTranslator();
     bool bResult = true;    // begin by assuming success
@@ -198,7 +198,7 @@ bool cPolicyUpdate::Execute( uint32 flags )  // throw (eError)
     {
         // notify the user of what we are doing...
         TW_NOTIFY_VERBOSE(  _T("%s%s\n"), 
-                            TSS_GetString( cTripwire, tripwire::STR_NOTIFY_PROCESSING ).c_str(),
+                            TSS_GetString( cEngine, engine::STR_NOTIFY_PROCESSING ).c_str(),
                             pTrans->ToStringDisplay( specIter.GetSpec()->GetStartPoint() ).c_str() );
 
         //
@@ -252,7 +252,7 @@ bool cPolicyUpdate::Execute( uint32 flags )  // throw (eError)
             // I need to construct a string that contains all of the 
             // property names that have changed. 
             //----------------------------------------------------------------
-            TSTRING badPropStr = TSS_GetString( cTripwire, tripwire::STR_PU_BAD_PROPS );
+            TSTRING badPropStr = TSS_GetString( cEngine, engine::STR_PU_BAD_PROPS );
             
             badPropStr += pTrans->ToStringDisplay( changeIter.GetOld()->GetName() );
             const cFCOPropVector& changeVector = changeIter.GetChangeVector();
@@ -279,7 +279,7 @@ bool cPolicyUpdate::Execute( uint32 flags )  // throw (eError)
     // now, we will update the database with everything in the report...
     // TODO -- don't do this if the secure mode flag was passed in
     //
-    TW_NOTIFY_NORMAL( TSS_GetString( cTripwire, tripwire::STR_PU_UPDATE_DB ).c_str() );
+    TW_NOTIFY_NORMAL( TSS_GetString( cEngine, engine::STR_PU_UPDATE_DB ).c_str() );
     //
     cUpdateDb update( mDb, report, mpBucket );
     
@@ -299,7 +299,7 @@ bool cPolicyUpdate::Execute( uint32 flags )  // throw (eError)
     // TODO -- I should probably write a general-purpose database iterator class to do this...
     //
 
-    TW_NOTIFY_NORMAL( TSS_GetString( cTripwire, tripwire::STR_PU_PRUNING ).c_str() );
+    TW_NOTIFY_NORMAL( TSS_GetString( cEngine, engine::STR_PU_PRUNING ).c_str() );
     //
     cDbDataSourceIter i( &mDb );
     i.SetErrorBucket(mpBucket);

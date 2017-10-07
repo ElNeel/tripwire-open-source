@@ -31,8 +31,8 @@
 //
 // generatedb.cpp
 
-#include "stdtripwire.h"
-#include "tripwirestrings.h"
+#include "stdengine.h"
+#include "enginestrings.h"
 #include "generatedb.h"
 #include "core/debug.h"
 #include "core/error.h"
@@ -161,7 +161,7 @@ void cGenerateDb::Execute( const cFCOSpecList& specList, cHierDatabase& db, iFCO
     {
         // verbose output
         TW_NOTIFY_VERBOSE(  _T("%s %s\n"), 
-                            TSS_GetString( cTripwire, tripwire::STR_NOTIFY_PROCESSING ).c_str(),
+                            TSS_GetString( cEngine, engine::STR_NOTIFY_PROCESSING ).c_str(),
                             iTWFactory::GetInstance()->GetNameTranslator()->ToStringDisplay
                                 ( specIter.Spec()->GetStartPoint() ).c_str() );
         //

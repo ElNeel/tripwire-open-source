@@ -31,7 +31,7 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 // twcmdline.cpp
-#include "stdtripwire.h"
+#include "stdengine.h"
 #include "twcmdline.h" 
 #include "core/cmdlineparser.h"
 #include "tw/configfile.h"
@@ -39,10 +39,10 @@
 #include "core/serializerimpl.h"    // cSerializerImpl
 #include "core/archive.h"     // cArchive and friends
 #include "fco/fcospeclist.h"  // cFCOSpecList
-#include "tripwirestrings.h"  // tripwire.exe specific strings
+#include "enginestrings.h"  // tripwire.exe specific strings
 #include "twcrypto/keyfile.h"       // cKeyFile -- used for encryption
 #include "tw/twutil.h"
-#include "twcmdlineutil.h"    // utility functions for the cmd line
+#include "engine/twcmdlineutil.h"    // utility functions for the cmd line
 #include "tw/fcoreport.h"        // for reports
 #include "tw/textreportviewer.h" // text report viewer
 #include "core/usernotify.h"        // for notifying the user of events
@@ -53,7 +53,7 @@
 #include "tw/systeminfo.h"
 #include "tw/filemanipulator.h"
 #include "fco/twfactory.h"
-#include "mailmessage.h"      // used for email reporting
+#include "engine/mailmessage.h"      // used for email reporting
 #include "fco/genrespeclist.h"
 #include "core/twlimits.h"           // for severity limits
 #include "core/errorgeneral.h"
@@ -62,16 +62,16 @@
 #include "core/stringutil.h"
 #include "util/fileutil.h"
 #include "tw/twstrings.h"
-#include "syslog_trip.h"
+#include "engine/syslog_trip.h"
 #include <set>
 #include "fco/parsergenreutil.h" // this is needed to figure out if a path is fully qualified for the current genre.
 #include "tw/fcodatabasefile.h"
 #include "fco/signature.h"
 #include "fco/genreswitcher.h"
-#include "generatedb.h"
-#include "integritycheck.h"
-#include "updatedb.h"
-#include "policyupdate.h"
+#include "engine/generatedb.h"
+#include "engine/integritycheck.h"
+#include "engine/updatedb.h"
+#include "engine/policyupdate.h"
 #include "core/platform.h"
 
 #ifdef TW_PROFILE
@@ -110,7 +110,7 @@ iTWMode* cTWCmdLine::GetMode(int argc, const TCHAR *const * argv)
    // note -- it is assumed the executable name is the first parameter
    if(argc < 2)
    {
-        TCOUT << TSS_GetString( cTripwire, tripwire::STR_TRIPWIRE_VERSION) << std::endl;
+        TCOUT << TSS_GetString( cEngine, engine::STR_TRIPWIRE_VERSION) << std::endl;
         TCOUT << TSS_GetString( cTW, tw::STR_VERSION) << std::endl;
         TCOUT << TSS_GetString( cTW, tw::STR_GET_HELP) << std::endl;
       return NULL;
@@ -122,7 +122,7 @@ iTWMode* cTWCmdLine::GetMode(int argc, const TCHAR *const * argv)
    {
       if(argc < 3)
       {
-          TCOUT << TSS_GetString( cTripwire, tripwire::STR_TRIPWIRE_VERSION) << std::endl;
+          TCOUT << TSS_GetString( cEngine, engine::STR_TRIPWIRE_VERSION) << std::endl;
             TCOUT << TSS_GetString( cTW, tw::STR_VERSION) << std::endl;
          TCOUT << TSS_GetString( cTW, tw::STR_ERR_NO_MODE) << std::endl;
             TCOUT << TSS_GetString( cTW, tw::STR_GET_HELP) << std::endl;
@@ -623,7 +623,7 @@ static void FillOutCmdLineInfo(cTWModeCommon* pModeInfo, const cCmdLineParser& c
    if( pModeInfo->mLocalProvided && pModeInfo->mbLatePassphrase )
    {
       // TODO -- I don't know if we should display this or not -- mdb
-      //iUserNotify::GetInstance()->Notify(  iUserNotify::V_VERBOSE, TSS_GetString( cTripwire, tripwire::STR_NOTIFY_CHANGE_PROMPT_TIME).c_str() );
+      //iUserNotify::GetInstance()->Notify(  iUserNotify::V_VERBOSE, TSS_GetString( cEngine, engine::STR_NOTIFY_CHANGE_PROMPT_TIME).c_str() );
       pModeInfo->mbLatePassphrase = false;
    }
 }
@@ -751,11 +751,11 @@ int cTWModeDbInit::Execute(cErrorQueue* pQueue)
       cTWCmdLineUtil::ParsePolicyFile(genreSpecList, mpData->mPolFile, mpData->mSiteKeyFile, pQueue);
 
         #ifdef TW_PROFILE
-      cTaskTimer timer("cTripwire::GenerateDatabase");
+      cTaskTimer timer("cengine::GenerateDatabase");
       timer.Start();
         #endif
 
-      iUserNotify::GetInstance()->Notify(1, TSS_GetString( cTripwire, tripwire::STR_GENERATING_DB ).c_str() );
+      iUserNotify::GetInstance()->Notify(1, TSS_GetString( cEngine, engine::STR_GENERATING_DB ).c_str() );
         
         uint32 gdbFlags = 0;
         gdbFlags |= ( mpData->mbResetAccessTime ? cGenerateDb::FLAG_ERASE_FOOTPRINTS_GD : 0 );
@@ -772,7 +772,7 @@ int cTWModeDbInit::Execute(cErrorQueue* pQueue)
          // notify the user
          //
          iUserNotify::GetInstance()->Notify( iUserNotify::V_NORMAL, 
-                                    TSS_GetString( cTripwire, tripwire::STR_PROCESSING_GENRE ).c_str(),
+                                    TSS_GetString( cEngine, engine::STR_PROCESSING_GENRE ).c_str(),
                                     cGenreSwitcher::GetInstance()->GenreToString( cGenreSwitcher::GetInstance()->CurrentGenre(), true ) );
 
          // add an entry to the database for each genre we are parsing
@@ -828,10 +828,10 @@ int cTWModeDbInit::Execute(cErrorQueue* pQueue)
    {
         if (mpData->mbLogToSyslog)
         {
-            TSTRING msg = TSS_GetString( cTripwire, tripwire::STR_SYSLOG_INIT_FAIL_MSG );
+            TSTRING msg = TSS_GetString( cEngine, engine::STR_SYSLOG_INIT_FAIL_MSG );
             msg.append(cErrorTable::GetInstance()->Get( e.GetID() ));
 
-            cSyslog::Log(TSS_GetString( cTripwire, tripwire::STR_SYSLOG_IDENT ).c_str(), cSyslog::LOG_ERROR, msg.c_str());
+            cSyslog::Log(TSS_GetString( cEngine, engine::STR_SYSLOG_IDENT ).c_str(), cSyslog::LOG_ERROR, msg.c_str());
         }
         
         cTWUtil::PrintErrorMsg(e);
@@ -839,12 +839,12 @@ int cTWModeDbInit::Execute(cErrorQueue* pQueue)
    }
 
    // everything went ok; return 0
-   iUserNotify::GetInstance()->Notify(1, TSS_GetString( cTripwire, tripwire::STR_INIT_SUCCESS ).c_str() );
+   iUserNotify::GetInstance()->Notify(1, TSS_GetString( cEngine, engine::STR_INIT_SUCCESS ).c_str() );
     
     if (mpData->mbLogToSyslog)
     {
-        TSTRING msg = TSS_GetString( cTripwire, tripwire::STR_SYSLOG_INIT_MSG ) + mpData->mDbFile;
-        cSyslog::Log(TSS_GetString( cTripwire, tripwire::STR_SYSLOG_IDENT ).c_str(), cSyslog::LOG_SUCCESS, msg.c_str());
+        TSTRING msg = TSS_GetString( cEngine, engine::STR_SYSLOG_INIT_MSG ) + mpData->mDbFile;
+        cSyslog::Log(TSS_GetString( cEngine, engine::STR_SYSLOG_IDENT ).c_str(), cSyslog::LOG_SUCCESS, msg.c_str());
     }
 
     return 0;
@@ -855,7 +855,7 @@ int cTWModeDbInit::Execute(cErrorQueue* pQueue)
 ///////////////////////////////////////////////////////////////////////////////
 TSTRING cTWModeDbInit::GetModeUsage( void )
 {
-   return ( TSS_GetString( cTripwire, tripwire::STR_TRIPWIRE_HELP_INIT ) );
+   return ( TSS_GetString( cEngine, engine::STR_TRIPWIRE_HELP_INIT ) );
 }
 
 //#############################################################################
@@ -1071,15 +1071,15 @@ bool cTWModeIC::Init(const cConfigFile& cf, const cCmdLineParser& cmdLine)
    if(mpData->mbEmail)
    {
       // make sure that email reporting and a file list were both not specified...        
-        TEST_INIT_REQUIREMENT( mpData->mFilesToCheck.empty(), cTripwire, tripwire::STR_ERR_IC_EMAIL_AND_FILES );
+        TEST_INIT_REQUIREMENT( mpData->mFilesToCheck.empty(), cEngine, engine::STR_ERR_IC_EMAIL_AND_FILES );
 
         // make sure that we have a valid mail method
-        TEST_INIT_REQUIREMENT( ( cMailMessage::NO_METHOD != mpData->mMailMethod ),      cTripwire, tripwire::STR_ERR_NO_MAIL_METHOD );
-        TEST_INIT_REQUIREMENT( ( cMailMessage::INVALID_METHOD != mpData->mMailMethod ), cTripwire, tripwire::STR_ERR_INVALID_MAIL_METHOD );
+        TEST_INIT_REQUIREMENT( ( cMailMessage::NO_METHOD != mpData->mMailMethod ),      cEngine, engine::STR_ERR_NO_MAIL_METHOD );
+        TEST_INIT_REQUIREMENT( ( cMailMessage::INVALID_METHOD != mpData->mMailMethod ), cEngine, engine::STR_ERR_INVALID_MAIL_METHOD );
 
         // error if method is SENDMAIL and no MAILPROGRAM
         TEST_INIT_REQUIREMENT( ( cMailMessage::MAIL_BY_PIPE != mpData->mMailMethod || !mpData->mMailProgram.empty()),
-                               cTripwire, tripwire::STR_ERR_MISSING_MAILPROGRAM );
+                               cEngine, engine::STR_ERR_MISSING_MAILPROGRAM );
    }
 
    // make sure that the config file and site key file are in sync...
@@ -1128,8 +1128,8 @@ int cTWModeIC::Execute(cErrorQueue* pQueue)
          {
             // TODO -- move these strings to the string table
             TOSTRINGSTREAM str;
-                str << TSS_GetString( cTripwire, tripwire::STR_ERR2_DIFFERENT_USERS1) << dbFile.GetHeader().GetCreator() 
-                    << TSS_GetString( cTripwire, tripwire::STR_ERR2_DIFFERENT_USERS2) << userName << std::ends;
+                str << TSS_GetString( cEngine, engine::STR_ERR2_DIFFERENT_USERS1) << dbFile.GetHeader().GetCreator() 
+                    << TSS_GetString( cEngine, engine::STR_ERR2_DIFFERENT_USERS2) << userName << std::ends;
             cTWUtil::PrintErrorMsg( eICDifferentUsers( str.str(), eError::NON_FATAL ) );
          }
       }
@@ -1176,18 +1176,18 @@ int cTWModeIC::Execute(cErrorQueue* pQueue)
       if(mpData->mFilesToCheck.size() != 0)
       {
          // we are checking files...
-         iUserNotify::GetInstance()->Notify(1, TSS_GetString( cTripwire, tripwire::STR_IC_FILES).c_str() );
+         iUserNotify::GetInstance()->Notify(1, TSS_GetString( cEngine, engine::STR_IC_FILES).c_str() );
          ////
          // tell the user we are ignoring severity level and rule name, if they specified them...
          //
          if( ! mpData->mRuleName.empty() ) 
-            iUserNotify::GetInstance()->Notify( iUserNotify::V_NORMAL, TSS_GetString( cTripwire, tripwire::STR_IC_IGNORING_RULE_NAME).c_str() );
+            iUserNotify::GetInstance()->Notify( iUserNotify::V_NORMAL, TSS_GetString( cEngine, engine::STR_IC_IGNORING_RULE_NAME).c_str() );
          if( mpData->mbTrimBySeverity ) 
-            iUserNotify::GetInstance()->Notify( iUserNotify::V_NORMAL, TSS_GetString( cTripwire, tripwire::STR_IC_IGNORING_SEV_NUM).c_str() );
+            iUserNotify::GetInstance()->Notify( iUserNotify::V_NORMAL, TSS_GetString( cEngine, engine::STR_IC_IGNORING_SEV_NUM).c_str() );
          if( ! mpData->mSeverityName.empty() ) 
-            iUserNotify::GetInstance()->Notify( iUserNotify::V_NORMAL, TSS_GetString( cTripwire, tripwire::STR_IC_IGNORING_SEV_NAME).c_str() );
+            iUserNotify::GetInstance()->Notify( iUserNotify::V_NORMAL, TSS_GetString( cEngine, engine::STR_IC_IGNORING_SEV_NAME).c_str() );
          if( ! mpData->mGenreName.empty() ) 
-            iUserNotify::GetInstance()->Notify( iUserNotify::V_NORMAL, TSS_GetString( cTripwire, tripwire::STR_IC_IGNORING_GENRE_NAME).c_str() );
+            iUserNotify::GetInstance()->Notify( iUserNotify::V_NORMAL, TSS_GetString( cEngine, engine::STR_IC_IGNORING_GENRE_NAME).c_str() );
          //
          ////
 
@@ -1307,7 +1307,7 @@ int cTWModeIC::Execute(cErrorQueue* pQueue)
             }
 
             iUserNotify::GetInstance()->Notify( iUserNotify::V_NORMAL, 
-                                       TSS_GetString( cTripwire, tripwire::STR_CHECKING_GENRE).c_str(),
+                                       TSS_GetString( cEngine, engine::STR_CHECKING_GENRE).c_str(),
                                        cGenreSwitcher::GetInstance()->GenreToString( genreToCheck ) );
          }
 
@@ -1343,7 +1343,7 @@ int cTWModeIC::Execute(cErrorQueue* pQueue)
             // message to the user...
             //
             iUserNotify::GetInstance()->Notify( iUserNotify::V_NORMAL, 
-                                       TSS_GetString( cTripwire, tripwire::STR_PROCESSING_GENRE ).c_str(),
+                                       TSS_GetString( cEngine, engine::STR_PROCESSING_GENRE ).c_str(),
                                        cGenreSwitcher::GetInstance()->GenreToString( cGenreSwitcher::GetInstance()->CurrentGenre(), true ) );
 
             cFCOSpecList specList = genreIter->GetSpecList();
@@ -1372,10 +1372,10 @@ int cTWModeIC::Execute(cErrorQueue* pQueue)
                bCheckMade = true;   //we've checked at least one rule.
 
                // do the integrity check...
-               iUserNotify::GetInstance()->Notify(1, TSS_GetString( cTripwire, tripwire::STR_INTEGRITY_CHECK).c_str());
+               iUserNotify::GetInstance()->Notify(1, TSS_GetString( cEngine, engine::STR_INTEGRITY_CHECK).c_str());
 
 #ifdef TW_PROFILE
-               cTaskTimer timer("cTripwire::IntegrityCheck");
+               cTaskTimer timer("cengine::IntegrityCheck");
                timer.Start();
 #endif
                cIntegrityCheck ic( (cGenre::Genre)dbIter.GetGenre(), specList, dbIter.GetDb(), report, pQueue );
@@ -1420,7 +1420,7 @@ int cTWModeIC::Execute(cErrorQueue* pQueue)
             else
             {                          
                iUserNotify::GetInstance()->Notify( iUserNotify::V_NORMAL, 
-                                          TSS_GetString( cTripwire, tripwire::STR_ERR_IC_NO_SPECS_LEFT).c_str(),
+                                          TSS_GetString( cEngine, engine::STR_ERR_IC_NO_SPECS_LEFT).c_str(),
                                           cGenreSwitcher::GetInstance()->GenreToString( genreIter->GetGenre(), true ) );
 
             }
@@ -1450,7 +1450,7 @@ int cTWModeIC::Execute(cErrorQueue* pQueue)
          if( !bCheckMade )
          {
             iUserNotify::GetInstance()->Notify( iUserNotify::V_NORMAL, 
-               TSS_GetString( cTripwire, tripwire::STR_IC_NOEMAIL_SENT).c_str(),
+               TSS_GetString( cEngine, engine::STR_IC_NOEMAIL_SENT).c_str(),
                _T("") );
          }
       }
@@ -1502,10 +1502,10 @@ int cTWModeIC::Execute(cErrorQueue* pQueue)
    {
         if (mpData->mbLogToSyslog)
         {
-            TSTRING msg = TSS_GetString( cTripwire, tripwire::STR_SYSLOG_IC_FAIL_MSG );
+            TSTRING msg = TSS_GetString( cEngine, engine::STR_SYSLOG_IC_FAIL_MSG );
             msg.append(cErrorTable::GetInstance()->Get( e.GetID() ));
 
-            cSyslog::Log(TSS_GetString( cTripwire, tripwire::STR_SYSLOG_IDENT ).c_str(), cSyslog::LOG_ERROR, msg.c_str());
+            cSyslog::Log(TSS_GetString( cEngine, engine::STR_SYSLOG_IDENT ).c_str(), cSyslog::LOG_ERROR, msg.c_str());
         }
         
         cTWUtil::PrintErrorMsg(e);
@@ -1514,16 +1514,16 @@ int cTWModeIC::Execute(cErrorQueue* pQueue)
    }
 
    // tell the user the report was saved
-   iUserNotify::GetInstance()->Notify(1, TSS_GetString( cTripwire, tripwire::STR_IC_SUCCESS).c_str());
+   iUserNotify::GetInstance()->Notify(1, TSS_GetString( cEngine, engine::STR_IC_SUCCESS).c_str());
 
     if (mpData->mbLogToSyslog)
     {
         cTextReportViewer trv( reportHeader, report );
-        TSTRING msg = TSS_GetString( cTripwire, tripwire::STR_SYSLOG_IC_MSG );
+        TSTRING msg = TSS_GetString( cEngine, engine::STR_SYSLOG_IC_MSG );
       msg.append(mpData->mDbFile);
       msg.append(_T(" "));
       msg.append(trv.SingleLineReport());
-        cSyslog::Log(TSS_GetString( cTripwire, tripwire::STR_SYSLOG_IDENT ).c_str(), cSyslog::LOG_SUCCESS, msg.c_str());
+        cSyslog::Log(TSS_GetString( cEngine, engine::STR_SYSLOG_IDENT ).c_str(), cSyslog::LOG_SUCCESS, msg.c_str());
     }
 
     // go directly into interactive update if that is what they want...
@@ -1554,7 +1554,7 @@ int cTWModeIC::Execute(cErrorQueue* pQueue)
 ///////////////////////////////////////////////////////////////////////////////
 TSTRING cTWModeIC::GetModeUsage( void )
 {
-   return ( TSS_GetString( cTripwire, tripwire::STR_TRIPWIRE_HELP_CHECK ) );
+   return ( TSS_GetString( cEngine, engine::STR_TRIPWIRE_HELP_CHECK ) );
 }
 
 //#############################################################################
@@ -1646,7 +1646,7 @@ bool cTWModeDbUpdate::Init(const cConfigFile& cf, const cCmdLineParser& cmdLine)
                // TODO -- print this to stderr; how do I display (1) the switch name 
                // and (2) the possible values?
                // TODO -- move {high, low} somewhere else
-               TCERR << TSS_GetString( cTripwire, tripwire::STR_ERR_BAD_PARAM) << _T(" : ") 
+               TCERR << TSS_GetString( cEngine, engine::STR_ERR_BAD_PARAM) << _T(" : ") 
                   << iter.ParamAt(0).c_str() << _T("; must be {high, low}") << std::endl;
                return false;
             }
@@ -1803,7 +1803,7 @@ int cTWModeDbUpdate::Execute(cErrorQueue* pQueue)
          }
          catch(...)
          {
-            TCERR << TSS_GetString( cTripwire, tripwire::STR_ERR_UPDATE_ED_LAUNCH) << std::endl;
+            TCERR << TSS_GetString( cEngine, engine::STR_ERR_UPDATE_ED_LAUNCH) << std::endl;
             throw;
          }
       }
@@ -1812,7 +1812,7 @@ int cTWModeDbUpdate::Execute(cErrorQueue* pQueue)
       if(! cTWCmdLineUtil::ReportContainsFCO(*mpData->mpReport))
       {
          // tell them ...
-         iUserNotify::GetInstance()->Notify(1, TSS_GetString( cTripwire, tripwire::STR_REPORT_EMPTY).c_str());
+         iUserNotify::GetInstance()->Notify(1, TSS_GetString( cEngine, engine::STR_REPORT_EMPTY).c_str());
          // keep those pesky ASSERTs from cKeyFile away!
          if(pPrivateKey)
             localKeyfile.ReleasePrivateKey();
@@ -1854,7 +1854,7 @@ int cTWModeDbUpdate::Execute(cErrorQueue* pQueue)
          if( (! update.Execute( udFlags )) && mpData->mbSecureMode )
          {
             // we will not perform the update; simply exit.
-            TCOUT << TSS_GetString( cTripwire, tripwire::STR_DB_NOT_UPDATED) << std::endl;
+            TCOUT << TSS_GetString( cEngine, engine::STR_DB_NOT_UPDATED) << std::endl;
             return 8;
          }
 
@@ -1898,10 +1898,10 @@ int cTWModeDbUpdate::Execute(cErrorQueue* pQueue)
    {
         if (mpData->mbLogToSyslog)
         {
-            TSTRING msg = TSS_GetString( cTripwire, tripwire::STR_SYSLOG_UP_FAIL_MSG );
+            TSTRING msg = TSS_GetString( cEngine, engine::STR_SYSLOG_UP_FAIL_MSG );
             msg.append(cErrorTable::GetInstance()->Get( e.GetID() ));
 
-            cSyslog::Log(TSS_GetString( cTripwire, tripwire::STR_SYSLOG_IDENT ).c_str(), cSyslog::LOG_ERROR, msg.c_str());
+            cSyslog::Log(TSS_GetString( cEngine, engine::STR_SYSLOG_IDENT ).c_str(), cSyslog::LOG_ERROR, msg.c_str());
         }
         
       cTWUtil::PrintErrorMsg(e);
@@ -1910,9 +1910,9 @@ int cTWModeDbUpdate::Execute(cErrorQueue* pQueue)
 
     if (mpData->mbLogToSyslog)
     {
-        TSTRING msg = TSS_GetString( cTripwire, tripwire::STR_SYSLOG_UP_MSG );
+        TSTRING msg = TSS_GetString( cEngine, engine::STR_SYSLOG_UP_MSG );
         msg.append(mpData->mDbFile);
-        cSyslog::Log(TSS_GetString( cTripwire, tripwire::STR_SYSLOG_IDENT ).c_str(), cSyslog::LOG_SUCCESS, msg.c_str());
+        cSyslog::Log(TSS_GetString( cEngine, engine::STR_SYSLOG_IDENT ).c_str(), cSyslog::LOG_SUCCESS, msg.c_str());
     }
 
     // everything went ok; return 0
@@ -1924,7 +1924,7 @@ int cTWModeDbUpdate::Execute(cErrorQueue* pQueue)
 ///////////////////////////////////////////////////////////////////////////////
 TSTRING cTWModeDbUpdate::GetModeUsage( void )
 {
-   return ( TSS_GetString( cTripwire, tripwire::STR_TRIPWIRE_HELP_UPDATE ) );
+   return ( TSS_GetString( cEngine, engine::STR_TRIPWIRE_HELP_UPDATE ) );
 }
 
 //#############################################################################
@@ -2015,7 +2015,7 @@ bool cTWModePolUpdate::Init(const cConfigFile& cf, const cCmdLineParser& cmdLine
                // TODO -- print this to stderr; how do I display (1) the switch name 
                // and (2) the possible values?
                // TODO -- move {high, low} somewhere else
-               TCERR << TSS_GetString( cTripwire, tripwire::STR_ERR_BAD_PARAM) << _T(" : ") 
+               TCERR << TSS_GetString( cEngine, engine::STR_ERR_BAD_PARAM) << _T(" : ") 
                   << iter.ParamAt(0).c_str() << _T("; must be {high, low}") << std::endl;
                return false;
             }
@@ -2047,7 +2047,7 @@ bool cTWModePolUpdate::Init(const cConfigFile& cf, const cCmdLineParser& cmdLine
    if( mpData->mSiteProvided && mpData->mbLatePassphrase )
    {
       // TODO -- I don't know if we should display this or not -- mdb
-      //iUserNotify::GetInstance()->Notify(  iUserNotify::V_VERBOSE, TSS_GetString( cTripwire, tripwire::STR_NOTIFY_CHANGE_PROMPT_TIME).c_str() );
+      //iUserNotify::GetInstance()->Notify(  iUserNotify::V_VERBOSE, TSS_GetString( cEngine, engine::STR_NOTIFY_CHANGE_PROMPT_TIME).c_str() );
       mpData->mbLatePassphrase = false;
    }
 
@@ -2099,8 +2099,8 @@ int cTWModePolUpdate::Execute(cErrorQueue* pQueue)
          {
             // TODO -- move these strings to the string table
             TOSTRINGSTREAM str;
-                str << TSS_GetString( cTripwire, tripwire::STR_ERR2_DIFFERENT_USERS1) << dbFile.GetHeader().GetCreator() 
-                    << TSS_GetString( cTripwire, tripwire::STR_ERR2_DIFFERENT_USERS2) << userName << std::ends;
+                str << TSS_GetString( cEngine, engine::STR_ERR2_DIFFERENT_USERS1) << dbFile.GetHeader().GetCreator() 
+                    << TSS_GetString( cEngine, engine::STR_ERR2_DIFFERENT_USERS2) << userName << std::ends;
             cTWUtil::PrintErrorMsg( eICDifferentUsers( str.str(), eError::NON_FATAL ) );
          }
       }
@@ -2166,7 +2166,7 @@ int cTWModePolUpdate::Execute(cErrorQueue* pQueue)
             if( (! pu.Execute(puFlags)) && (mpData->mbSecureMode) )
             {
                // they were in secure mode and errors occured; an error condition
-               TCOUT << TSS_GetString( cTripwire, tripwire::STR_ERR_POL_UPDATE) << std::endl;
+               TCOUT << TSS_GetString( cEngine, engine::STR_ERR_POL_UPDATE) << std::endl;
                return 8;
             }
             // we need to update the database's prop set...
@@ -2180,7 +2180,7 @@ int cTWModePolUpdate::Execute(cErrorQueue* pQueue)
          {
             // do a database init for this genre; it did not appear in the old policy...
             //
-            TW_NOTIFY_NORMAL( TSS_GetString( cTripwire, tripwire::STR_PU_ADDING_GENRE ).c_str(),
+            TW_NOTIFY_NORMAL( TSS_GetString( cEngine, engine::STR_PU_ADDING_GENRE ).c_str(),
                            cGenreSwitcher::GetInstance()->GenreToString( genreIter->GetGenre(), true ) );
             dbFile.AddGenre( genreIter->GetGenre(), &dbIter );
 
@@ -2271,10 +2271,10 @@ int cTWModePolUpdate::Execute(cErrorQueue* pQueue)
    {
         if (mpData->mbLogToSyslog)
         {
-            TSTRING msg = TSS_GetString( cTripwire, tripwire::STR_SYSLOG_POLUP_FAIL_MSG );
+            TSTRING msg = TSS_GetString( cEngine, engine::STR_SYSLOG_POLUP_FAIL_MSG );
             msg.append(cErrorTable::GetInstance()->Get( e.GetID() ));
 
-            cSyslog::Log(TSS_GetString( cTripwire, tripwire::STR_SYSLOG_IDENT ).c_str(), cSyslog::LOG_ERROR, msg.c_str());
+            cSyslog::Log(TSS_GetString( cEngine, engine::STR_SYSLOG_IDENT ).c_str(), cSyslog::LOG_ERROR, msg.c_str());
         }
         
       cTWUtil::PrintErrorMsg(e);
@@ -2283,9 +2283,9 @@ int cTWModePolUpdate::Execute(cErrorQueue* pQueue)
 
     if (mpData->mbLogToSyslog)
     {
-        TSTRING msg = TSS_GetString( cTripwire, tripwire::STR_SYSLOG_POLUP_MSG );
+        TSTRING msg = TSS_GetString( cEngine, engine::STR_SYSLOG_POLUP_MSG );
         msg.append(mpData->mDbFile);
-        cSyslog::Log(TSS_GetString( cTripwire, tripwire::STR_SYSLOG_IDENT ).c_str(), cSyslog::LOG_SUCCESS, msg.c_str());
+        cSyslog::Log(TSS_GetString( cEngine, engine::STR_SYSLOG_IDENT ).c_str(), cSyslog::LOG_SUCCESS, msg.c_str());
     }
 
     return 0;
@@ -2296,7 +2296,7 @@ int cTWModePolUpdate::Execute(cErrorQueue* pQueue)
 ///////////////////////////////////////////////////////////////////////////////
 TSTRING cTWModePolUpdate::GetModeUsage( void )
 {
-   return ( TSS_GetString( cTripwire, tripwire::STR_TRIPWIRE_HELP_UPDATE_POLICY ) );
+   return ( TSS_GetString( cEngine, engine::STR_TRIPWIRE_HELP_UPDATE_POLICY ) );
 }
 
 //#############################################################################
@@ -2371,13 +2371,13 @@ bool cTWModeTest::Init(const cConfigFile& cf, const cCmdLineParser& cmdLine)
    }
 
     // make sure that we have a valid operation
-    TEST_INIT_REQUIREMENT( ( mpData->mMode != cTWModeTest_i::TEST_INVALID ),      cTripwire, tripwire::STR_ERR_NO_TEST_MODE );
+    TEST_INIT_REQUIREMENT( ( mpData->mMode != cTWModeTest_i::TEST_INVALID ),      cEngine, engine::STR_ERR_NO_TEST_MODE );
     
     if( mpData->mMode == cTWModeTest_i::TEST_EMAIL )
     {
         // make sure that we have a valid mail method
-        TEST_INIT_REQUIREMENT( ( cMailMessage::NO_METHOD != mpData->mMailMethod ),      cTripwire, tripwire::STR_ERR_NO_MAIL_METHOD );
-        TEST_INIT_REQUIREMENT( ( cMailMessage::INVALID_METHOD != mpData->mMailMethod ), cTripwire, tripwire::STR_ERR_INVALID_MAIL_METHOD );
+        TEST_INIT_REQUIREMENT( ( cMailMessage::NO_METHOD != mpData->mMailMethod ),      cEngine, engine::STR_ERR_NO_MAIL_METHOD );
+        TEST_INIT_REQUIREMENT( ( cMailMessage::INVALID_METHOD != mpData->mMailMethod ), cEngine, engine::STR_ERR_INVALID_MAIL_METHOD );
     }
 
     return true;
@@ -2406,7 +2406,7 @@ int cTWModeTest::Execute(cErrorQueue* pQueue)
 
 TSTRING cTWModeTest::GetModeUsage( )
 {
-   return ( TSS_GetString( cTripwire, tripwire::STR_TRIPWIRE_HELP_TEST ) );
+   return ( TSS_GetString( cEngine, engine::STR_TRIPWIRE_HELP_TEST ) );
 }
 
 //#############################################################################
@@ -2534,13 +2534,13 @@ int cTWModeHelp::Execute(cErrorQueue* pQueue)
    std::set<TSTRING>::iterator it = mpData->mModes.begin();
 
    // We'll want to output the version information, regardless:
-   TCOUT << TSS_GetString( cTripwire, tripwire::STR_TRIPWIRE_VERSION) << std::endl;
+   TCOUT << TSS_GetString( cEngine, engine::STR_TRIPWIRE_VERSION) << std::endl;
    TCOUT << TSS_GetString( cTW, tw::STR_VERSION) << std::endl;
 
    if( it == mpData->mModes.end() ) // all that was passed was --help
    {
       // Output a short usage summary for each mode.
-      TCOUT << TSS_GetString( cTripwire, tripwire::STR_TRIPWIRE_USAGE_SUMMARY );
+      TCOUT << TSS_GetString( cEngine, engine::STR_TRIPWIRE_USAGE_SUMMARY );
       //
       // That's it, return.
       return 8;
@@ -2551,11 +2551,11 @@ int cTWModeHelp::Execute(cErrorQueue* pQueue)
       if( _tcscmp( (*it).c_str(), _T("all")) == 0 )
       {
          //Since --help all was passed, emit all help messages and return.
-         TCOUT<< TSS_GetString( cTripwire, tripwire::STR_TRIPWIRE_HELP_INIT );
-         TCOUT<< TSS_GetString( cTripwire, tripwire::STR_TRIPWIRE_HELP_CHECK );
-         TCOUT<< TSS_GetString( cTripwire, tripwire::STR_TRIPWIRE_HELP_UPDATE );
-         TCOUT<< TSS_GetString( cTripwire, tripwire::STR_TRIPWIRE_HELP_UPDATE_POLICY );
-         TCOUT<< TSS_GetString( cTripwire, tripwire::STR_TRIPWIRE_HELP_TEST );
+         TCOUT<< TSS_GetString( cEngine, engine::STR_TRIPWIRE_HELP_INIT );
+         TCOUT<< TSS_GetString( cEngine, engine::STR_TRIPWIRE_HELP_CHECK );
+         TCOUT<< TSS_GetString( cEngine, engine::STR_TRIPWIRE_HELP_UPDATE );
+         TCOUT<< TSS_GetString( cEngine, engine::STR_TRIPWIRE_HELP_UPDATE_POLICY );
+         TCOUT<< TSS_GetString( cEngine, engine::STR_TRIPWIRE_HELP_TEST );
 #ifdef DEBUG
          // TODO: Do we need help messages for these modes? DRA
 #endif
@@ -2575,7 +2575,7 @@ int cTWModeHelp::Execute(cErrorQueue* pQueue)
          //make sure we don't print the same help twice...
          if( mpData->mPrinted.find( _T("init") ) == mpData->mPrinted.end() )
          {
-            TCOUT<< TSS_GetString( cTripwire, tripwire::STR_TRIPWIRE_HELP_INIT );
+            TCOUT<< TSS_GetString( cEngine, engine::STR_TRIPWIRE_HELP_INIT );
             mpData->mPrinted.insert( _T("init") );
          }
       }
@@ -2583,7 +2583,7 @@ int cTWModeHelp::Execute(cErrorQueue* pQueue)
       {
          if( mpData->mPrinted.find( _T("check") ) == mpData->mPrinted.end() )
          {
-            TCOUT<< TSS_GetString( cTripwire, tripwire::STR_TRIPWIRE_HELP_CHECK );
+            TCOUT<< TSS_GetString( cEngine, engine::STR_TRIPWIRE_HELP_CHECK );
             mpData->mPrinted.insert( _T("check") );
          }
       }
@@ -2591,7 +2591,7 @@ int cTWModeHelp::Execute(cErrorQueue* pQueue)
       {
          if( mpData->mPrinted.find( _T("update") ) == mpData->mPrinted.end() )
          {
-            TCOUT<< TSS_GetString( cTripwire, tripwire::STR_TRIPWIRE_HELP_UPDATE );
+            TCOUT<< TSS_GetString( cEngine, engine::STR_TRIPWIRE_HELP_UPDATE );
             mpData->mPrinted.insert( _T("update") );
          }
       }
@@ -2599,7 +2599,7 @@ int cTWModeHelp::Execute(cErrorQueue* pQueue)
       {
          if( mpData->mPrinted.find( _T("update-policy") ) == mpData->mPrinted.end() )
          {
-            TCOUT<< TSS_GetString( cTripwire, tripwire::STR_TRIPWIRE_HELP_UPDATE_POLICY );
+            TCOUT<< TSS_GetString( cEngine, engine::STR_TRIPWIRE_HELP_UPDATE_POLICY );
             mpData->mPrinted.insert( _T("update-policy") );
          }
       }
@@ -2607,7 +2607,7 @@ int cTWModeHelp::Execute(cErrorQueue* pQueue)
       {
          if( mpData->mPrinted.find( _T("test") ) == mpData->mPrinted.end() )
          {
-            TCOUT<< TSS_GetString( cTripwire, tripwire::STR_TRIPWIRE_HELP_TEST );
+            TCOUT<< TSS_GetString( cEngine, engine::STR_TRIPWIRE_HELP_TEST );
             mpData->mPrinted.insert( _T("test") );
          }
       }

@@ -38,7 +38,7 @@
 #include "core/error.h"
 #include "tw/twinit.h"
 #include "tw/twutil.h"
-#include "twcmdline.h"
+#include "engine/twcmdline.h"
 #include "core/cmdlineparser.h"
 #include "tw/configfile.h"
 #include "core/errorbucketimpl.h"
@@ -49,7 +49,8 @@
 #include <exception>
 
 #include "tw/twstrings.h"
-#include "tripwirestrings.h"
+#include "engine/enginestrings.h"
+#include "tripwire/tripwirestrings.h"
 #include "tripwire.h"           // package initialization
 
 #include "fco/fcogenre.h"
