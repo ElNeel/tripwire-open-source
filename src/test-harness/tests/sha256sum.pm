@@ -1,14 +1,14 @@
 
 use twtools;
 
-package sha1sum;
+package sha256sum;
 
 ######################################################################
 # One time module initialization goes in here...
 #
 BEGIN {
 
-    $description = "sha1 hash check";
+    $description = "sha256 hash check";
 }
 
 
@@ -34,34 +34,35 @@ sub run() {
   printf("%-30s", "-- $description");
 
 
-  # lets see if the system 'sha1sum' agree's with siggen's sha1 hash
+  # lets see if the system 'sha256sum' agree's with siggen's sha256 hash
   #
-  my ($sha1sum, undef) = split(/ /, `sha1sum $twtools::twrootdir/test`);
-  if ($sha1sum eq "") {
-      twtools::logStatus("sha1sum not found, trying shasum instead\n");
-      ($sha1sum, undef) = split(/ /, `shasum -a 1 $twtools::twrootdir/test`);
+  my ($sha256sum, undef) = split(/ /, `sha256sum $twtools::twrootdir/test`);
+
+  if ($sha256sum eq "") {
+      twtools::logStatus("sha256sum not found, trying shasum instead\n");
+      ($sha256sum, undef) = split(/ /, `shasum -a 256 $twtools::twrootdir/test`);
   }
-  if ($sha1sum eq "") {
-      twtools::logStatus("sha1sum not found, trying openssl instead\n");
-      (undef, $sha1sum) = split(/=/, `openssl sha1 $twtools::twrootdir/test`);
+  if ($sha256sum eq "") {
+      twtools::logStatus("shasum not found, trying openssl instead\n");
+      (undef, $sha256sum) = split(/=/, `openssl sha256 $twtools::twrootdir/test`);
   }
-  if ($sha1sum eq "") {
+  if ($sha256sum eq "") {
       ++$twtools::twskippedtests;
       print "SKIPPED\n";
       return;
   }
 
-  my $siggen = `$twtools::twrootdir/bin/siggen -h -t -S $twtools::twrootdir/test`;
+  my $siggen = `$twtools::twrootdir/bin/siggen -h -t -2 $twtools::twrootdir/test`;
 
-  chomp $sha1sum;
+  chomp $sha256sum;
   chomp $siggen;
-  $sha1sum =~ s/^\s+|\s+$//g;
+  $sha256sum =~ s/^\s+|\s+$//g;
   $siggen =~ s/^\s+|\s+$//g;
 
-  twtools::logStatus("sha1sum reports: $sha1sum\n");
+  twtools::logStatus("sha256sum reports: $sha256sum\n");
   twtools::logStatus("siggen reports: $siggen\n");
 
-  $twpassed = ($sha1sum eq $siggen);
+  $twpassed = ($sha256sum eq $siggen);
 
   #########################################################
   #
