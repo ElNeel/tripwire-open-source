@@ -55,7 +55,7 @@
 
 TSS_ImplementPackage(cSiggen)
 
-    cSiggen::cSiggen()
+cSiggen::cSiggen()
 {
     TSS_Dependency(cTW);
     TSS_Dependency(cUtil);

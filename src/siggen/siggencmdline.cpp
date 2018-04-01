@@ -49,8 +49,8 @@
 #include <unistd.h>
 #include <fcntl.h>
 #if SUPPORTS_TERMIOS
-#    include <termios.h>
-#    include <sys/ioctl.h>
+#include <termios.h>
+#include <sys/ioctl.h>
 #endif
 //#include <signal.h>
 int _getch(void);
@@ -128,7 +128,7 @@ void cSiggenCmdLine::InitCmdLineParser(cCmdLineParser& parser)
     //Signatures:
     parser.AddArg(CRC32,  TSTRING(_T("C")), TSTRING(_T("CRC32")),       cCmdLineParser::PARAM_NONE);
     parser.AddArg(MD5,    TSTRING(_T("M")), TSTRING(_T("MD5")),         cCmdLineParser::PARAM_NONE);
-    parser.AddArg(SHA,    TSTRING(_T("S")), TSTRING(_T("SHA")),         cCmdLineParser::PARAM_NONE);
+    parser.AddArg(SHA,    TSTRING(_T("S")), TSTRING(_T("SHA-1")),       cCmdLineParser::PARAM_NONE);
     parser.AddArg(HAVAL,  TSTRING(_T("H")), TSTRING(_T("HAVAL")),       cCmdLineParser::PARAM_NONE);
     parser.AddArg(SHA256, TSTRING(_T("2")), TSTRING(_T("SHA-256")),     cCmdLineParser::PARAM_NONE);
     parser.AddArg(SHA512, TSTRING(_T("5")), TSTRING(_T("SHA-512")),     cCmdLineParser::PARAM_NONE);

@@ -42,10 +42,11 @@
 #include "fcoundefprop.h"
 #include "core/archive.h"
 #include "core/debug.h"
+
 #ifndef HAVE_OPENSSL_MD5_H
-#    ifdef HAVE_STRINGS_H
-#        include <strings.h> /* for bcopy(), this is only needed for Solaris */
-#    endif
+#ifdef HAVE_STRINGS_H
+#include <strings.h> /* for bcopy(), this is only needed for Solaris */
+#endif
 #endif
 
 using namespace std;

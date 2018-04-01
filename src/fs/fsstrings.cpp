@@ -71,7 +71,7 @@ TSS_BeginStringtable(cFS)
     TSS_StringEntry(fs::STR_PROP_MD5,          _T("MD5")),
     TSS_StringEntry(fs::STR_PROP_FILETYPE,     _T("Object Type")),
     TSS_StringEntry(fs::STR_PROP_GROWING_FILE, _T("Growing Object Size")),
-    TSS_StringEntry(fs::STR_PROP_SHA,          _T("SHA")),
+    TSS_StringEntry(fs::STR_PROP_SHA,          _T("SHA-1")),
     TSS_StringEntry(fs::STR_PROP_HAVAL,        _T("HAVAL")),
     TSS_StringEntry(fs::STR_PROP_ACL,          _T("ACL Placeholder -- Not Implemented")),
     TSS_StringEntry(fs::STR_PROP_SHA256,       _T("SHA-256")),

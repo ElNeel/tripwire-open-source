@@ -116,6 +116,18 @@ bool cFSParserUtil::MapStringToProperty(const TSTRING& str, int& propIndex) cons
         case 'l':
             propIndex = cFSPropSet::PROP_GROWING_FILE;
             break;
+        case 'A':
+            propIndex = cFSPropSet::PROP_ACL;
+            break;
+        case 'f':
+            propIndex = cFSPropSet::PROP_FLAGS;
+            break;
+        case 'G':
+            propIndex = cFSPropSet::PROP_GEN;
+            break;
+        case 'e':
+            propIndex = cFSPropSet::PROP_RESERVED;
+            break;
         case '2':
             propIndex = cFSPropSet::PROP_SHA256;
             break;

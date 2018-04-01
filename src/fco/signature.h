@@ -37,15 +37,15 @@
 #define __SIGNATURE_H
 
 #ifndef __TCHAR_H
-#    include "core/tchar.h"
+#include "core/tchar.h"
 #endif
 
 #ifndef __TYPES_H
-#    include "types.h"
+#include "types.h"
 #endif
 
 #ifndef __FCOPROP_H
-#    include "fcoprop.h"
+#include "fcoprop.h"
 #endif
 
 #include <vector>
@@ -78,7 +78,7 @@
 
 /*Use OSX CommonCrypto lib if available*/
 #ifdef HAVE_COMMONCRYPTO_COMMONDIGEST_H
-#    include <CommonCrypto/CommonDigest.h>
+#include <CommonCrypto/CommonDigest.h>
 #endif
 
 
@@ -187,7 +187,6 @@ private:
 ///////////////////////////////////////////////////////////////////////////////
 // class cNullSignature -- The signature that is always 0
 ///////////////////////////////////////////////////////////////////////////////
-
 class cNullSignature : public iSignature
 {
     DECLARE_TYPEDSERIALIZABLE()
@@ -210,11 +209,11 @@ protected:
     virtual bool IsEqual(const iSignature& rhs) const;
 };
 
+
 ///////////////////////////////////////////////////////////////////////////////
 // class cChecksumSignature -- A simple signature consisting of all the bytes
 //      in an archive.  Useful as an example if nothing else.
 ///////////////////////////////////////////////////////////////////////////////
-
 class cChecksumSignature : public iSignature
 {
     DECLARE_TYPEDSERIALIZABLE()
@@ -239,10 +238,10 @@ protected:
     uint64 mChecksum;
 };
 
+
 ///////////////////////////////////////////////////////////////////////////////
 // class cCRC32Signature -- A CRC32 signature
 ///////////////////////////////////////////////////////////////////////////////
-
 class cCRC32Signature : public iSignature
 {
     DECLARE_TYPEDSERIALIZABLE()
@@ -268,10 +267,10 @@ protected:
     CRC_INFO mCRCInfo;
 };
 
+
 ///////////////////////////////////////////////////////////////////////////////
 // class cMD5Signature -- A MD5 signature
 ///////////////////////////////////////////////////////////////////////////////
-
 class cMD5Signature : public iSignature
 {
     DECLARE_TYPEDSERIALIZABLE()
@@ -305,6 +304,7 @@ protected:
     uint8   md5_digest[MD5_DIGEST_LENGTH];
 #endif
 };
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // class cSHASignature -- A "Secure Hash Algorithm" signature
@@ -351,6 +351,7 @@ protected:
 #endif
     uint32 sha_digest[SIG_UINT32_SIZE];
 };
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // class cHAVALSignature --
@@ -438,7 +439,7 @@ protected:
 
 
 ///////////////////////////////////////////////////////////////////////////////
-// class cSHA256Signature
+// class cSHA512Signature
 ///////////////////////////////////////////////////////////////////////////////
 class cSHA512Signature : public iSignature
 {

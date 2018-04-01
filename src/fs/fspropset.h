@@ -94,6 +94,9 @@ public:
         PROP_SHA,
         PROP_HAVAL,
         PROP_ACL,
+        PROP_FLAGS,
+        PROP_GEN,
+        PROP_RESERVED,
         PROP_SHA256,
         PROP_SHA512,
 
@@ -164,6 +167,9 @@ public:
     PROPERTY_OBJ(cSHASignature,    SHA,         PROP_SHA)
     PROPERTY_OBJ(cHAVALSignature,  HAVAL,       PROP_HAVAL)
     //PROPERTY_OBJ(cUnixACL,       ACL,         PROP_ACL)          // will eventually be implememented
+    PROPERTY(cFCOPropInt64,        Flags,       PROP_FLAGS)        // will eventually be implememented
+    PROPERTY(cFCOPropUint64,       GenNumber,   PROP_GEN)          // will eventually be implememented
+    // PROP_RESERVED is, er, reserved for future use
     PROPERTY_OBJ(cSHA256Signature, SHA256,      PROP_SHA256)
     PROPERTY_OBJ(cSHA512Signature, SHA512,      PROP_SHA512)
 
