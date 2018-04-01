@@ -107,7 +107,7 @@ TSS_BeginStringtable(cFS)
     TSS_StringEntry(fs::STR_PARSER_DEVICE,     _T("Device")),
     TSS_StringEntry(fs::STR_PARSER_HOSTNAME,   _T("HOSTNAME")),
 
-    TSS_StringEntry(fs::STR_FS_PARSER_READONLY_VAL,   _T("+pinugsmtdbCM-raclSH25" )),
+    TSS_StringEntry(fs::STR_FS_PARSER_READONLY_VAL,   _T("+pinugsmtdbCM2-raclSH5" )),
     TSS_StringEntry(fs::STR_FS_PARSER_DYNAMIC_VAL,    _T("+pinugtd-rsacmblCMSH25" )),
     TSS_StringEntry(fs::STR_FS_PARSER_GROWING_VAL,    _T("+pinugtdl-rsacmbCMSH25" )),
     TSS_StringEntry(fs::STR_FS_PARSER_IGNOREALL_VAL,  _T("-pinusgamctdrblCMSH25" )),

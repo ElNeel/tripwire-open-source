@@ -64,11 +64,19 @@ TWREPORT=;
 HOSTNAME=;
 
 @@section FS
-SEC_CRIT      = $(IgnoreNone)-SHa ;  # Critical files that cannot change
-SEC_SUID      = $(IgnoreNone)-SHa ;  # Binaries with the SUID or SGID flags set
-SEC_BIN       = $(ReadOnly) ;        # Binaries that should not change
-SEC_CONFIG    = $(Dynamic) ;         # Config files that are changed infrequently but accessed often
-SEC_LOG       = $(Growing) ;         # Files that grow, but that should never change ownership
+SEC_DEVICE        = +pugsdr-intlbamcCMSH25 ;
+SEC_DYNAMIC       = +pinugtd-srlbamcCMSH25 ;
+SEC_GROWING       = +pinugtdl-srbamcCMSH25 ;
+SEC_IGNORE_ALL    = -pinugtsdrlbamcCMSH25 ;
+SEC_IGNORE_NONE   = +pinugtsdrbamcCMSH25-l ;
+SEC_READONLY      = +pinugtsdbmCM2-rlacSH5 ;
+SEC_TEMPORARY     = +pugt ;
+
+SEC_CRIT      = $(SEC_IGNORE_NONE)-SHa ;  # Critical files that cannot change
+SEC_SUID      = $(SEC_IGNORE_NONE)-SHa ;  # Binaries with the SUID or SGID flags set
+SEC_BIN       = $(SEC_READONLY) ;        # Binaries that should not change
+SEC_CONFIG    = $(SEC_DYNAMIC) ;         # Config files that are changed infrequently but accessed often
+SEC_LOG       = $(SEC_GROWING) ;         # Files that grow, but that should never change ownership
 SEC_INVARIANT = +tpug ;              # Directories that should never change permission or ownership
 SIG_LOW       = 33 ;                 # Non-critical files that are of minimal security impact
 SIG_MED       = 66 ;                 # Non-critical files that are of significant security impact

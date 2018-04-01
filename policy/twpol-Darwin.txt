@@ -62,13 +62,12 @@ HOSTNAME=;
 #
 ##############################################################################
 
-SEC_DEVICE        = +pugsr-dintlbamcCMSH ;
-SEC_DYNAMIC       = +pinugt-dsrlbamcCMSH ;
-SEC_READONLY      = +pinugtsbmCM-drlacSH ;
-SEC_GROWING       = +pinugtl-dsrbamcCMSH ;
-
-SEC_IGNORE_ALL    = -pinugtsdrlbamcCMSH ;
-SEC_IGNORE_NONE    = +pinugtsdrbamcCMSH-l ;
+SEC_DEVICE        = +pugsdr-intlbamcCMSH25 ;
+SEC_DYNAMIC       = +pinugtd-srlbamcCMSH25 ;
+SEC_GROWING       = +pinugtdl-srbamcCMSH25 ;
+SEC_IGNORE_ALL    = -pinugtsdrlbamcCMSH25 ;
+SEC_IGNORE_NONE   = +pinugtsdrbamcCMSH25-l ;
+SEC_READONLY      = +pinugtsdbmCM2-rlacSH5 ;
 SEC_TEMPORARY     = +pugt ;
 
 

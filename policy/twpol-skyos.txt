@@ -56,13 +56,13 @@ HOSTNAME=;
 #
 ##############################################################################
 
-SEC_DEVICE        = +pugsdr-intlbamcCMSH ;
-SEC_DYNAMIC       = +pinugtd-srlbamcCMSH ;
-SEC_GROWING       = +pinugtdl-srbamcCMSH ;
-SEC_IGNORE_ALL    = -pinugtsdrlbamcCMSH ;
-SEC_IGNORE_NONE    = +pinugtsdrbamcCMSH-l ;
-SEC_READONLY      = +pinugtsdbmCM-rlacSH ;
-SEC_TEMPORARY       = +pugt ;
+SEC_DEVICE        = +pugsdr-intlbamcCMSH25 ;
+SEC_DYNAMIC       = +pinugtd-srlbamcCMSH25 ;
+SEC_GROWING       = +pinugtdl-srbamcCMSH25 ;
+SEC_IGNORE_ALL    = -pinugtsdrlbamcCMSH25 ;
+SEC_IGNORE_NONE   = +pinugtsdrbamcCMSH25-l ;
+SEC_READONLY      = +pinugtsdbmCM2-rlacSH5 ;
+SEC_TEMPORARY     = +pugt ;
 
 @@section FS 
 
