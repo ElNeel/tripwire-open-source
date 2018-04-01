@@ -1,31 +1,31 @@
 //
 // The developer of the original code and/or files is Tripwire, Inc.
-// Portions created by Tripwire, Inc. are copyright (C) 2000-2017 Tripwire,
+// Portions created by Tripwire, Inc. are copyright (C) 2000-2018 Tripwire,
 // Inc. Tripwire is a registered trademark of Tripwire, Inc.  All rights
 // reserved.
-// 
+//
 // This program is free software.  The contents of this file are subject
 // to the terms of the GNU General Public License as published by the
 // Free Software Foundation; either version 2 of the License, or (at your
 // option) any later version.  You may redistribute it and/or modify it
 // only in compliance with the GNU General Public License.
-// 
+//
 // This program is distributed in the hope that it will be useful.
 // However, this program is distributed AS-IS WITHOUT ANY
 // WARRANTY; INCLUDING THE IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS
 // FOR A PARTICULAR PURPOSE.  Please see the GNU General Public License
 // for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,
 // USA.
-// 
+//
 // Nothing in the GNU General Public License or any other license to use
 // the code or files shall permit you to use Tripwire's trademarks,
 // service marks, or other intellectual property without Tripwire's
 // prior written consent.
-// 
+//
 // If you have any questions, please contact Tripwire, Inc. at either
 // info@tripwire.org or www.tripwire.org.
 //
@@ -38,12 +38,12 @@
 #ifndef __FSSTRINGS_H
 #define __FSSTRINGS_H
 
-#include "fs.h"    // for: STRINGTABLE syntax
+#include "fs.h" // for: STRINGTABLE syntax
 
 //--Message Keys
 
-TSS_BeginStringIds( fs )
- 
+TSS_BeginStringIds(fs)
+
     // file types
     STR_FT_INVALID,
     STR_FT_FILE,
@@ -78,12 +78,10 @@ TSS_BeginStringIds( fs )
     STR_PROP_SHA,
     STR_PROP_HAVAL,
     STR_PROP_ACL,
-
     STR_PROP_SHA256,
     STR_PROP_SHA512,
 
-/* Leaving these here in case we ever implement long property names
-
+    /* Leaving these here in case we ever implement long property names
     STR_PARSER_PROP_DEV,
     STR_PARSER_PROP_RDEV,
     STR_PARSER_PROP_INODE,
@@ -103,10 +101,7 @@ TSS_BeginStringIds( fs )
     STR_PARSER_PROP_MD5,
     STR_PARSER_PROP_SHA,
     STR_PARSER_PROP_HAVAL,
-    STR_PARSER_PROP_SHA256,
-    STR_PARSER_PROP_SHA512,
-*/    
-
+*/
     STR_PARSER_READONLY,
     STR_PARSER_DYNAMIC,
     STR_PARSER_GROWING,
@@ -114,7 +109,7 @@ TSS_BeginStringIds( fs )
     STR_PARSER_IGNORENONE,
     STR_PARSER_DEVICE,
     STR_PARSER_HOSTNAME,
-    
+
     STR_FS_PARSER_READONLY_VAL,
     STR_FS_PARSER_DYNAMIC_VAL,
     STR_FS_PARSER_GROWING_VAL,
@@ -122,11 +117,10 @@ TSS_BeginStringIds( fs )
     STR_FS_PARSER_IGNORENONE_VAL,
     STR_FS_PARSER_DEVICE_VAL,
     STR_FS_PARSER_HOSTNAME_VAL,
-    
+
     STR_DIFFERENT_FILESYSTEM
 
-TSS_EndStringIds( fs )
+    TSS_EndStringIds(fs)
 
 
-#endif//__FSSTRINGS_H
-
+#endif //__FSSTRINGS_H

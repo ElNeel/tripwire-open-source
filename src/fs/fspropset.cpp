@@ -1,31 +1,31 @@
 //
 // The developer of the original code and/or files is Tripwire, Inc.
-// Portions created by Tripwire, Inc. are copyright (C) 2000-2017 Tripwire,
+// Portions created by Tripwire, Inc. are copyright (C) 2000-2018 Tripwire,
 // Inc. Tripwire is a registered trademark of Tripwire, Inc.  All rights
 // reserved.
-// 
+//
 // This program is free software.  The contents of this file are subject
 // to the terms of the GNU General Public License as published by the
 // Free Software Foundation; either version 2 of the License, or (at your
 // option) any later version.  You may redistribute it and/or modify it
 // only in compliance with the GNU General Public License.
-// 
+//
 // This program is distributed in the hope that it will be useful.
 // However, this program is distributed AS-IS WITHOUT ANY
 // WARRANTY; INCLUDING THE IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS
 // FOR A PARTICULAR PURPOSE.  Please see the GNU General Public License
 // for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,
 // USA.
-// 
+//
 // Nothing in the GNU General Public License or any other license to use
 // the code or files shall permit you to use Tripwire's trademarks,
 // service marks, or other intellectual property without Tripwire's
 // prior written consent.
-// 
+//
 // If you have any questions, please contact Tripwire, Inc. at either
 // info@tripwire.org or www.tripwire.org.
 //
@@ -49,12 +49,12 @@
 //#############################################################################
 TSTRING cFCOPropFileType::AsString() const
 {
-    static int fileTypes [] =
+    static int fileTypes[] =
     {
         fs::STR_FT_INVALID,
-        fs::STR_FT_FILE, 
-        fs::STR_FT_DIR, 
-        fs::STR_FT_BLOCKDEV, 
+        fs::STR_FT_FILE,
+        fs::STR_FT_DIR,
+        fs::STR_FT_BLOCKDEV,
         fs::STR_FT_CHARDEV,
         fs::STR_FT_SYMLINK,
         fs::STR_FT_FIFO,
@@ -65,13 +65,13 @@ TSTRING cFCOPropFileType::AsString() const
     };
 
     int32 fileType = GetValue();
-    if((fileType > cFSPropSet::FT_INVALID) && (fileType < cFSPropSet::FT_NUMITEMS))
-        return TSS_GetString( cFS, fileTypes[fileType] );
+    if ((fileType > cFSPropSet::FT_INVALID) && (fileType < cFSPropSet::FT_NUMITEMS))
+        return TSS_GetString(cFS, fileTypes[fileType]);
     else
-        return TSS_GetString( cFS, fileTypes[cFSPropSet::FT_INVALID] );
+        return TSS_GetString(cFS, fileTypes[cFSPropSet::FT_INVALID]);
 }
 
- 
+
 //#############################################################################
 // cFSPropSet
 //#############################################################################
@@ -83,7 +83,7 @@ IMPLEMENT_TYPEDSERIALIZABLE(cFSPropSet, _T("cFSPropSet"), 0, 1);
 // TODO -- put these in a class-static hash table of something of the like so that
 //      name lookups are constant time -- mdb
 ///////////////////////////////////////////////////////////////////////////////
-static int cFSPropSet_PropNames [] = 
+static int cFSPropSet_PropNames[] =
 {
     fs::STR_PROP_FILETYPE,
     fs::STR_PROP_DEV,
@@ -114,22 +114,22 @@ static int cFSPropSet_PropNames [] =
 ///////////////////////////////////////////////////////////////////////////////
 void cFSPropSet::TraceContents(int dl) const
 {
-    if(dl < 0) 
+    if (dl < 0)
         dl = cDebug::D_DEBUG;
 
     cDebug d("cFSPropSet::TraceContents");
 
     TOSTRINGSTREAM ostr;
     ostr << _T("File Sysytem Prop Set: ");
-    for(int i=0; i<GetNumProps(); i++)
+    for (int i = 0; i < GetNumProps(); i++)
     {
-        if(mValidProps.ContainsItem(i))
+        if (mValidProps.ContainsItem(i))
         {
-            ostr << _T("[") << i << _T("]") << GetPropName(i) << _T(" = ") << GetPropAt(i)->AsString().c_str() << _T(", ");
+            ostr << _T("[") << i << _T("]") << GetPropName(i) << _T(" = ") << GetPropAt(i)->AsString().c_str()
+                 << _T(", ");
         }
     }
     d.Trace(dl, _T("%s\n"), ostr.str().c_str());
-
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -142,16 +142,16 @@ void cFSPropSet::CopyProps(const iFCOPropSet* pSrc, const cFCOPropVector& propsT
     // first, modify my valid vector...
     mValidProps |= propsToCopy;
 
-    for(int i=0; i < GetNumFSProps(); i++)
+    for (int i = 0; i < GetNumFSProps(); i++)
     {
-        if(propsToCopy.ContainsItem(i))
+        if (propsToCopy.ContainsItem(i))
         {
-            ASSERT( pSrc->GetValidVector().ContainsItem( i ) );
+            ASSERT(pSrc->GetValidVector().ContainsItem(i));
             const iFCOProp* pProp = pSrc->GetPropAt(i);
 
             if (pProp->GetType() != cFCOUndefinedProp::GetInstance()->GetType())
             {
-                GetPropAt(i)->Copy( pProp );
+                GetPropAt(i)->Copy(pProp);
                 mUndefinedProps.RemoveItem(i);
             }
             else
@@ -175,11 +175,11 @@ void cFSPropSet::InvalidateAll()
     mValidProps.Clear();
 }
 
-void cFSPropSet::InvalidateProps(const cFCOPropVector& propsToInvalidate) 
+void cFSPropSet::InvalidateProps(const cFCOPropVector& propsToInvalidate)
 {
-    cFCOPropVector  inBoth  =  mValidProps;
-    inBoth                  &= propsToInvalidate;
-    mValidProps             ^= inBoth;
+    cFCOPropVector inBoth = mValidProps;
+    inBoth &= propsToInvalidate;
+    mValidProps ^= inBoth;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -193,36 +193,31 @@ int cFSPropSet::GetNumFSProps()
 ///////////////////////////////////////////////////////////////////////////////
 // ctors. dtor, operator=
 ///////////////////////////////////////////////////////////////////////////////
-cFSPropSet::cFSPropSet() :
-    iFCOPropSet(),
-    mValidProps(cFSPropSet::PROP_NUMITEMS),
-    mUndefinedProps(cFSPropSet::PROP_NUMITEMS)
+cFSPropSet::cFSPropSet()
+    : iFCOPropSet(), mValidProps(cFSPropSet::PROP_NUMITEMS), mUndefinedProps(cFSPropSet::PROP_NUMITEMS)
 {
     // TODO: do I want to zero out all the property values here?
 }
 
 cFSPropSet::~cFSPropSet()
 {
-
 }
 
-cFSPropSet::cFSPropSet(const cFSPropSet& rhs) :
-    iFCOPropSet(),
-    mValidProps(cFSPropSet::PROP_NUMITEMS)
+cFSPropSet::cFSPropSet(const cFSPropSet& rhs) : iFCOPropSet(), mValidProps(cFSPropSet::PROP_NUMITEMS)
 {
     *this = rhs;
 }
 
 const cFSPropSet& cFSPropSet::operator=(const cFSPropSet& rhs)
 {
-    mValidProps = rhs.GetValidVector();
+    mValidProps     = rhs.GetValidVector();
     mUndefinedProps = rhs.mUndefinedProps;
 
-    for (int i=0; i < PROP_NUMITEMS; i++)
+    for (int i = 0; i < PROP_NUMITEMS; i++)
     {
-        if (mValidProps.ContainsItem(i) && !mUndefinedProps.ContainsItem(i)) 
+        if (mValidProps.ContainsItem(i) && !mUndefinedProps.ContainsItem(i))
         {
-            GetPropAt(i)->Copy( ((cFSPropSet&)rhs).GetPropAt(i) ); 
+            GetPropAt(i)->Copy(((cFSPropSet&)rhs).GetPropAt(i));
             // call non-const GetPropAt for rhs
             // don't want it to assert ContainsItem
         }
@@ -231,21 +226,21 @@ const cFSPropSet& cFSPropSet::operator=(const cFSPropSet& rhs)
     return *this;
 }
 
-const cFCOPropVector& cFSPropSet::GetValidVector() const 
+const cFCOPropVector& cFSPropSet::GetValidVector() const
 {
     return mValidProps;
 }
 
-int cFSPropSet::GetNumProps() const 
+int cFSPropSet::GetNumProps() const
 {
     return PROP_NUMITEMS;
 }
 
 int cFSPropSet::GetPropIndex(const TCHAR* name) const
 {
-    for(int i=0; i<PROP_NUMITEMS; i++)
+    for (int i = 0; i < PROP_NUMITEMS; i++)
     {
-        if( _tcscmp( name, TSS_GetString( cFS, cFSPropSet_PropNames[i]).c_str() ) == 0 )
+        if (_tcscmp(name, TSS_GetString(cFS, cFSPropSet_PropNames[i]).c_str()) == 0)
             return i;
     }
     return iFCOPropSet::PROP_NOT_FOUND;
@@ -254,72 +249,72 @@ int cFSPropSet::GetPropIndex(const TCHAR* name) const
 TSTRING cFSPropSet::GetPropName(int index) const
 {
     ASSERT((index >= 0) && (index < GetNumProps()));
-    return TSS_GetString( cFS, cFSPropSet_PropNames[index]);
+    return TSS_GetString(cFS, cFSPropSet_PropNames[index]);
 }
 
 const iFCOProp* cFSPropSet::GetPropAt(int index) const
 {
     // the specified property had better have a valid value...
     ASSERT((index >= 0) && (index < GetNumProps()));
-    ASSERT(mValidProps.ContainsItem(index));    
+    ASSERT(mValidProps.ContainsItem(index));
 
     if (mUndefinedProps.ContainsItem(index))
     {
         return cFCOUndefinedProp::GetInstance();
     }
 
-    switch(index)
+    switch (index)
     {
-        case PROP_FILETYPE:
-            return &mFileType;
-        case PROP_DEV:
-            return &mDev;
-        case PROP_RDEV:
-            return &mRDev;
-        case PROP_INODE:
-            return &mInode;
-        case PROP_MODE:
-            return &mMode;
-        case PROP_NLINK:
-            return &mNLink;
-        case PROP_UID:
-            return &mUID;
-        case PROP_GID:
-            return &mGID;
-        case PROP_SIZE:
-            return &mSize;
-        case PROP_ATIME:
-            return &mAccessTime;
-        case PROP_MTIME:
-            return &mModifyTime;
-        case PROP_CTIME:
-            return &mCreateTime;
-        case PROP_BLOCK_SIZE:
-            return &mBlockSize;
-        case PROP_BLOCKS:
-            return &mBlocks;
-        case PROP_GROWING_FILE:
-            return &mGrowingFile;
-        case PROP_CRC32:
-            return &mCRC32;
-        case PROP_MD5:
-            return &mMD5;
-        case PROP_SHA:
-            return &mSHA;
-        case PROP_HAVAL:
-            return &mHAVAL;
-        case PROP_ACL:
-            ASSERT( false ); // unimplemented
-            return NULL;
-        case PROP_SHA256:
-            return &mSHA256;
-        case PROP_SHA512:
-            return &mSHA512;
-        default:
-        {
-            // bad parameter passed to GetPropAt
-            ASSERT(false);
-        }
+    case PROP_FILETYPE:
+        return &mFileType;
+    case PROP_DEV:
+        return &mDev;
+    case PROP_RDEV:
+        return &mRDev;
+    case PROP_INODE:
+        return &mInode;
+    case PROP_MODE:
+        return &mMode;
+    case PROP_NLINK:
+        return &mNLink;
+    case PROP_UID:
+        return &mUID;
+    case PROP_GID:
+        return &mGID;
+    case PROP_SIZE:
+        return &mSize;
+    case PROP_ATIME:
+        return &mAccessTime;
+    case PROP_MTIME:
+        return &mModifyTime;
+    case PROP_CTIME:
+        return &mCreateTime;
+    case PROP_BLOCK_SIZE:
+        return &mBlockSize;
+    case PROP_BLOCKS:
+        return &mBlocks;
+    case PROP_GROWING_FILE:
+        return &mGrowingFile;
+    case PROP_CRC32:
+        return &mCRC32;
+    case PROP_MD5:
+        return &mMD5;
+    case PROP_SHA:
+        return &mSHA;
+    case PROP_HAVAL:
+        return &mHAVAL;
+    case PROP_ACL:
+        ASSERT(false); // unimplemented
+        return NULL;
+    case PROP_SHA256:
+        return &mSHA256;
+    case PROP_SHA512:
+        return &mSHA512;
+    default:
+    {
+        // bad parameter passed to GetPropAt
+        ASSERT(false);
+    }
     }
     return NULL;
 }
@@ -331,68 +326,67 @@ iFCOProp* cFSPropSet::GetPropAt(int index)
     ASSERT((index >= 0) && (index < GetNumProps()));
     // don't assert for non-const GetPropAt() because we might want to get a non-valid
     // property for copying
-    //ASSERT(mValidProps.ContainsItem(index));  
+    //ASSERT(mValidProps.ContainsItem(index));
 
     if (mUndefinedProps.ContainsItem(index))
     {
         return cFCOUndefinedProp::GetInstance();
     }
 
-    switch(index)
+    switch (index)
     {
-        case PROP_FILETYPE:
-            return &mFileType;
-        case PROP_DEV:
-            return &mDev;
-        case PROP_RDEV:
-            return &mRDev;
-        case PROP_INODE:
-            return &mInode;
-        case PROP_MODE:
-            return &mMode;
-        case PROP_NLINK:
-            return &mNLink;
-        case PROP_UID:
-            return &mUID;
-        case PROP_GID:
-            return &mGID;
-        case PROP_SIZE:
-            return &mSize;
-        case PROP_ATIME:
-            return &mAccessTime;
-        case PROP_MTIME:
-            return &mModifyTime;
-        case PROP_CTIME:
-            return &mCreateTime;
-        case PROP_BLOCK_SIZE:
-            return &mBlockSize;
-        case PROP_BLOCKS:
-            return &mBlocks;
-        case PROP_GROWING_FILE:
-            return &mGrowingFile;
-        case PROP_CRC32:
-            return &mCRC32;
-        case PROP_MD5:
-            return &mMD5;
-        case PROP_SHA:
-            return &mSHA;
-        case PROP_HAVAL:
-            return &mHAVAL;
-        case PROP_ACL:
-            ASSERT( false ); // unimplemented
-            return NULL;
-        case PROP_SHA256:
-            return &mSHA256;
-        case PROP_SHA512:
-            return &mSHA512;
-        default:
-        {
-            // bad parameter passed to GetPropAt
-            ASSERT(false);
-        }
+    case PROP_FILETYPE:
+        return &mFileType;
+    case PROP_DEV:
+        return &mDev;
+    case PROP_RDEV:
+        return &mRDev;
+    case PROP_INODE:
+        return &mInode;
+    case PROP_MODE:
+        return &mMode;
+    case PROP_NLINK:
+        return &mNLink;
+    case PROP_UID:
+        return &mUID;
+    case PROP_GID:
+        return &mGID;
+    case PROP_SIZE:
+        return &mSize;
+    case PROP_ATIME:
+        return &mAccessTime;
+    case PROP_MTIME:
+        return &mModifyTime;
+    case PROP_CTIME:
+        return &mCreateTime;
+    case PROP_BLOCK_SIZE:
+        return &mBlockSize;
+    case PROP_BLOCKS:
+        return &mBlocks;
+    case PROP_GROWING_FILE:
+        return &mGrowingFile;
+    case PROP_CRC32:
+        return &mCRC32;
+    case PROP_MD5:
+        return &mMD5;
+    case PROP_SHA:
+        return &mSHA;
+    case PROP_HAVAL:
+        return &mHAVAL;
+    case PROP_ACL:
+        ASSERT(false); // unimplemented
+        return NULL;
+    case PROP_SHA256:
+        return &mSHA256;
+    case PROP_SHA512:
+        return &mSHA512;
+    default:
+    {
+        // bad parameter passed to GetPropAt
+        ASSERT(false);
+    }
     }
     return NULL;
-
 }
 
 void cFSPropSet::Read(iSerializer* pSerializer, int32 version)
@@ -403,7 +397,7 @@ void cFSPropSet::Read(iSerializer* pSerializer, int32 version)
     mValidProps.Read(pSerializer);
     mUndefinedProps.Read(pSerializer);
 
-    for (int i=0; i < PROP_NUMITEMS; i++)
+    for (int i = 0; i < PROP_NUMITEMS; i++)
     {
         if (mValidProps.ContainsItem(i) && !mUndefinedProps.ContainsItem(i))
             GetPropAt(i)->Read(pSerializer);
@@ -412,13 +406,12 @@ void cFSPropSet::Read(iSerializer* pSerializer, int32 version)
 
 void cFSPropSet::Write(iSerializer* pSerializer) const
 {
-   mValidProps.Write(pSerializer);
-   mUndefinedProps.Write(pSerializer);
- 
-   for (int i=0; i < PROP_NUMITEMS; i++)
-   {
+    mValidProps.Write(pSerializer);
+    mUndefinedProps.Write(pSerializer);
+
+    for (int i = 0; i < PROP_NUMITEMS; i++)
+    {
         if (mValidProps.ContainsItem(i) && !mUndefinedProps.ContainsItem(i))
             GetPropAt(i)->Write(pSerializer);
-   }
+    }
 }
-
